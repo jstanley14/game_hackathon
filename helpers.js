@@ -9,10 +9,6 @@ function hitTestRectangle(r1, r2) {
 
     var r1_glob = r1.parent.toGlobal(r1.position);
     var r2_glob = r2.parent.toGlobal(r2.position);
-    console.log(r1_glob);
-    console.log(r2_glob);
-    console.log(r2.width);
-    console.log(r2.height);
 
     //Find the center points of each sprite
     r1_glob.centerX = r1_glob.x + r1.width / 2;
@@ -56,15 +52,6 @@ function hitTestRectangle(r1, r2) {
     //`hit` will be either `true` or `false`
     return hit;
 };
-
-function droppedInZone(loc, zone) {
-    console.log(loc);
-    console.log(zone.x);
-    console.log(zone.y);
-    console.log(zone.width);
-    console.log(zone.height);
-    return false;
-}
 
 //The `randomInt` helper function
 function randomInt(min, max) {
@@ -157,11 +144,14 @@ function onDragMove() {
 }
 
 function dropInComboArea(elm) {
-    var dropped = comboArea.children;
-    if (dropped.length > 0) {
-        if (dropped[dropped.length - 1].type !== elm.type) {
-            elm.visible = false;
-            comboArea.addChild(elm);
+    if (comboArea.mathSeq.length > 0) {
+        if (comboArea.mathSeq[comboArea.mathSeq.length - 1].type !== elm.type) {
+            if (elm.type === "number") {
+                elm.visible = false;
+            } else {
+                elm.position.x = elm.origPosition.x;
+                elm.position.y = elm.origPosition.y;
+            }
             addToComboArea(elm);
         } else {
             elm.position.x = elm.origPosition.x;
@@ -170,7 +160,6 @@ function dropInComboArea(elm) {
     } else {
         if (elm.type === "number") {
             elm.visible = false;
-            comboArea.addChild(elm);
             addToComboArea(elm);
         } else {
             elm.position.x = elm.origPosition.x;
@@ -181,4 +170,40 @@ function dropInComboArea(elm) {
 
 function addToComboArea(elm) {
     comboArea.text = comboArea.text + elm.children[0].children[0].text;
+    comboArea.mathSeq.push({ type: elm.type, value: elm.value });
+}
+
+function checkResult() {
+    var seq = comboArea.mathSeq;
+    var idx = -1;
+    // Want to evaluate result without using 'eval' function.
+    // First sweep mathSeq for higher order operators
+    while ((idx = seq.findIndex(function(elm) {
+        return elm.type === "operator" && (elm.value === "/" || elm.value === "*")})) !== -1) {
+        if (seq[idx].value === "/") {
+            seq[idx - 1].value = seq[idx - 1].value / seq[idx + 1].value;
+        }  else {
+            seq[idx - 1].value = seq[idx - 1].value * seq[idx + 1].value;
+        }
+        seq.splice(idx, 2);
+    }
+    // Then evaluate lower-order operators.
+    while ((idx = seq.findIndex(function(elm) {
+        return elm.type === "operator" && (elm.value === "+" || elm.value === "-")})) !== -1) {
+        if (seq[idx].value === "+") {
+            seq[idx - 1].value = seq[idx - 1].value + seq[idx + 1].value;
+        }  else {
+            seq[idx - 1].value = seq[idx - 1].value - seq[idx + 1].value;
+        }
+        seq.splice(idx, 2);
+    }
+
+    return seq[0].value;
+}
+
+// Debugging
+function showSeq(seq) {
+    seq.forEach(function(elm) {
+        console.log(elm.type + "----" + elm.value.toString());
+    })
 }
