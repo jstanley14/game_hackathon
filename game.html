@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.6/pixi.js"></script>
+<script src="tink.js"></script>
+<script src="helpers.js"></script>
+<body>
+<script type="text/javascript">
+
+    //Aliases
+    var Container = PIXI.Container,
+        autoDetectRenderer = PIXI.autoDetectRenderer,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        TextureCache = PIXI.utils.TextureCache,
+        Texture = PIXI.Texture,
+        Sprite = PIXI.Sprite,
+        Text = PIXI.Text,
+        Graphics = PIXI.Graphics;
+
+    var width = 1080;
+    var height = 1920;
+    var sizing = 0.25;
+
+    //Create a Pixi stage and renderer and add the
+    //renderer.view to the DOM
+    var stage = new Container(),
+        renderer = autoDetectRenderer(width * sizing, height * sizing);
+    document.body.appendChild(renderer.view);
+
+    loader
+        .add("images/treasureHunter.json")
+        .load(setup);
+
+    //Define variables that might be used in more
+    //than one function
+    var state, explorer, treasure, blobs, chimes, exit, player, dungeon,
+        door, healthBar, message, gameScene, gameOverScene, enemies, id;
+
+    function setup() {                                                                                                                                                      [378/4306]
+
+        //Make the game scene and add it to the stage
+        gameScene = new Container();
+        stage.addChild(gameScene);
+
+        //Make the sprites and add them to the `gameScene`
+        //Create an alias for the texture atlas frame ids
+        id = resources["images/treasureHunter.json"].textures;
+
+        // Create top battery bar
+        var topBar = new Container();
+        var battery = new Graphics();
+        battery.beginFill("0x15BC31");
+        battery.lineStyle(4, "0xFFFFFF", 1);
+        battery.drawRect(0, 0, 100, 20);
+        battery.endFill();
+        battery.position.set(168, 0);
+        topBar.addChild(battery);
+        gameScene.addChild(topBar);
+
+        // Create Minis zone
+        var minisZone = new Container();
+        var minisFrame = new Graphics();
+        minisFrame.beginFill("0xFFFFFF");
+        minisFrame.lineStyle(4, "0x000000", 1);
+        minisFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
+        minisFrame.endFill();
+        minisFrame.position.set(0, 24);
+        minisZone.addChild(minisFrame);
+        gameScene.addChild(minisZone);
+
+        // Create Prompt zone
+        var promptZone = new Container();
+        var promptFrame = new Graphics();
+        promptFrame.beginFill("0xFFFFFF");
+        promptFrame.lineStyle(4, "0x000000", 1);
+        promptFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
+        promptFrame.endFill();
+        promptFrame.position.set(0, 120);
+        promptZone.addChild(promptFrame);
+        gameScene.addChild(promptZone);
+
+        // Create Combo zone
+        var comboZone = new Container();
+        var comboFrame = new Graphics();
+        comboFrame.beginFill("0xFFFFFF");
+        comboFrame.lineStyle(4, "0x000000", 1);
+        comboFrame.drawRect(0, 0, width * sizing, height * sizing * 0.1);
+        comboFrame.endFill();
+        comboFrame.position.set(0, 230);
+        comboZone.addChild(comboFrame);
+        gameScene.addChild(comboZone);
+
+        // Create Options zone
+        var optionsZone = new Container();
+        var optionsFrame = new Graphics();
+        optionsFrame.beginFill("0xFFFFFF");
+        optionsFrame.lineStyle(4, "0x000000", 1);
+        optionsFrame.drawRect(0, 0, width * sizing, height * sizing * 0.4);
+        optionsFrame.endFill();
+        optionsFrame.position.set(0, 280);
+        optionsZone.addChild(optionsFrame);
+        gameScene.addChild(optionsZone);
+
+//        //Dungeon
+//        dungeon = new Sprite(id["dungeon.png"]);
+//        gameScene.addChild(dungeon);
+//
+//        //Door
+//        door = new Sprite(id["door.png"]);
+//        door.position.set(32, 0);
+//        gameScene.addChild(door);
+//
+//        //Create the health bar
+//        healthBar = new Container();
+//        healthBar.position.set(stage.width - 170, 6)
+//        gameScene.addChild(healthBar);
+//
+//        //Create the black background rectangle
+//        var innerBar = new Graphics();
+//        innerBar.beginFill(0x000000);
+//        innerBar.drawRect(0, 0, 128, 8);
+//        innerBar.endFill();
+//        healthBar.addChild(innerBar);
+//
+//        //Create the front red rectangle
+//        var outerBar = new Graphics();
+//        outerBar.beginFill(0xFF3300);
+//        outerBar.drawRect(0, 0, 128, 8);
+//        outerBar.endFill();
+//        healthBar.addChild(outerBar);
+//
+//        healthBar.outer = outerBar;                                                                                                                                           [282/4306]
+
+        //Create the `gameOver` scene
+        gameOverScene = new Container();
+        stage.addChild(gameOverScene);
+
+        //Make the `gameOver` scene invisible when the game first starts
+        gameOverScene.visible = false;
+
+        //Create the text sprite and add it to the `gameOver` scene
+        message = new Text(
+            "The End!",
+            {font: "64px Futura", fill: "white"}
+        );
+        message.x = 120;
+        message.y = stage.height / 2 - 32;
+        gameOverScene.addChild(message);
+
+        //Set the game state
+        state = play;
+
+        //Start the game loop
+        gameLoop();
+    }
+
+    function gameLoop(){
+        //Loop this function 60 times per second
+        requestAnimationFrame(gameLoop);
+
+        //Update the current game state
+        state();
+
+        //Render the stage
+        renderer.render(stage);
+    }
+
+    function play() {
+        //console.log('booey')
+    }
+
+
+
+</script>
+</body>
+</html>
+
