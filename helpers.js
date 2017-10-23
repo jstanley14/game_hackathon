@@ -56,3 +56,47 @@ function hitTestRectangle(r1, r2) {
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function createNumbers() {
+    var numbers = [];
+    for (var i = 0; i < 8; i++) {
+        var number = randomInt(1, 12);
+        var text = new Text(number.toString(),
+            { fontFamily: "Arial", fontSize: 32, fill: "black" });
+        // Center text in frame.
+        if (number < 10) {
+            text.anchor.set(-0.5, 0)
+        }
+
+        var button = new Container();
+        var buttonFrame = new Graphics();
+        buttonFrame.beginFill("0xFFFFFF");
+        buttonFrame.lineStyle(2, "0x000000", 1);
+        //buttonFrame.drawRect(0, 0, 36, 36);
+        buttonFrame.drawCircle(17, 17, 28);
+        buttonFrame.endFill();
+        buttonFrame.addChild(text);
+        button.addChild(buttonFrame);
+        numbers.push(button);
+    }
+    return numbers;
+}
+
+function createOperators() {
+    var operators = [];
+    ["+", "-", "*", "/"].forEach(function(symbol) {
+        var op = new Text(symbol,
+            { fontFamily: "Arial", fontSize: 32, fill: "black" });
+        op.anchor.set(-0.6, 0);
+        var button = new Container();
+        var buttonFrame = new Graphics();
+        buttonFrame.beginFill("0xFFFFFF");
+        buttonFrame.lineStyle(2, "0x000000", 1);
+        buttonFrame.drawRect(0, 0, 40, 40);
+        buttonFrame.endFill();
+        buttonFrame.addChild(op);
+        button.addChild(buttonFrame);
+        operators.push(button);
+    });
+    return operators;
+}

@@ -21,6 +21,8 @@
         Text = PIXI.Text,
         Graphics = PIXI.Graphics;
 
+
+
     var width = 1080;
     var height = 1920;
     var sizing = 0.25;
@@ -29,6 +31,9 @@
     //renderer.view to the DOM
     var stage = new Container(),
         renderer = autoDetectRenderer(width * sizing, height * sizing);
+
+    var t = new Tink(PIXI, renderer.view);
+
     document.body.appendChild(renderer.view);
 
     loader
@@ -79,8 +84,9 @@
         promptFrame.lineStyle(4, "0x000000", 1);
         promptFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
         promptFrame.endFill();
-        promptFrame.position.set(0, 120);
+        //promptFrame.position.set(0, 120);
         promptZone.addChild(promptFrame);
+        promptZone.position.set(0, 120);
         gameScene.addChild(promptZone);
 
         // Create Combo zone
@@ -90,8 +96,9 @@
         comboFrame.lineStyle(4, "0x000000", 1);
         comboFrame.drawRect(0, 0, width * sizing, height * sizing * 0.1);
         comboFrame.endFill();
-        comboFrame.position.set(0, 230);
+        //comboFrame.position.set(0, 230);
         comboZone.addChild(comboFrame);
+        comboZone.position.set(0, 230);
         gameScene.addChild(comboZone);
 
         // Create Options zone
@@ -101,39 +108,36 @@
         optionsFrame.lineStyle(4, "0x000000", 1);
         optionsFrame.drawRect(0, 0, width * sizing, height * sizing * 0.4);
         optionsFrame.endFill();
-        optionsFrame.position.set(0, 280);
         optionsZone.addChild(optionsFrame);
+        optionsZone.position.set(0, 280);
         gameScene.addChild(optionsZone);
 
-//        //Dungeon
-//        dungeon = new Sprite(id["dungeon.png"]);
-//        gameScene.addChild(dungeon);
-//
-//        //Door
-//        door = new Sprite(id["door.png"]);
-//        door.position.set(32, 0);
-//        gameScene.addChild(door);
-//
-//        //Create the health bar
-//        healthBar = new Container();
-//        healthBar.position.set(stage.width - 170, 6)
-//        gameScene.addChild(healthBar);
-//
-//        //Create the black background rectangle
-//        var innerBar = new Graphics();
-//        innerBar.beginFill(0x000000);
-//        innerBar.drawRect(0, 0, 128, 8);
-//        innerBar.endFill();
-//        healthBar.addChild(innerBar);
-//
-//        //Create the front red rectangle
-//        var outerBar = new Graphics();
-//        outerBar.beginFill(0xFF3300);
-//        outerBar.drawRect(0, 0, 128, 8);
-//        outerBar.endFill();
-//        healthBar.addChild(outerBar);
-//
-//        healthBar.outer = outerBar;                                                                                                                                           [282/4306]
+        var numbers = createNumbers();
+        var operators = createOperators();
+        var leftOffset = 17;
+        var vertOffset = 20;
+        var buttonSize = 47;
+        var padding = 20;
+        // Add number buttons.
+        for (var i = 0; i < 8; i++) {
+            optionsZone.addChild(numbers[i]);
+            if (i < 4) {
+                numbers[i].position.set(
+                    leftOffset + i * (buttonSize + padding),
+                    vertOffset);
+            } else {
+                numbers[i].position.set(
+                    leftOffset + (i - 4) * (buttonSize + padding),
+                    vertOffset + buttonSize + padding);
+            }
+        }
+        // Add operator buttons.
+        for (var i = 0; i < 4; i++) {
+            optionsZone.addChild(operators[i]);
+            operators[i].position.set(
+                leftOffset + i * (buttonSize + padding),
+                vertOffset + 2 * (buttonSize + padding) - 10);
+        }
 
         //Create the `gameOver` scene
         gameOverScene = new Container();
