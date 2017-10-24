@@ -166,9 +166,11 @@
             virus.width = 35;
             virus.height = 30;
             minisZone.addChild(virus);
-            virus.x = curVirus.x + curVirus.width + 50 + virus.width * i;
-            // need to account for wrapping
-            virus.y = curVirus.y + 20;
+            let multiple = Math.floor(i / 4);
+            virus.x = curVirus.x + curVirus.width + 20 + virus.width * (i % 4);
+
+            console.log(multiple);
+            virus.y = curVirus.y + 20 + multiple * 30;
         }
 
 
