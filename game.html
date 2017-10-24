@@ -57,7 +57,8 @@
     //Define variables that might be used in more
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
-        restartButton, resultText, message, gameScene, gameOverScene, enemies, id;
+        restartButton, resultText, message, gameScene, gameOverScene, promptText,
+        progressNumber, id;
 
 
     let questions = config.questions;
@@ -89,7 +90,7 @@
         battery.endFill();
         battery.position.set(168, 0);
         topBar.addChild(battery);
-        time = new Text("", { fontFamily: "Arial", fontSize: 10, fill: "white"});
+        time = new Text("", { fontFamily: "Arial", fontSize: 16, fill: "white", fontWeight: "lighter"});
         time.position.set(5, 5);
         topBar.addChild(time);
         gameScene.addChild(topBar);
@@ -102,7 +103,46 @@
         minisImg.width = width * sizing;
         minisImg.height = height * sizing * 0.28;
         minisZone.addChild(minisImg);
+        let progressImage = new Sprite(resources["images/progress_number.png"].texture);
+        progressImage.height = progressImage.width = 50;
+        progressNumber = new Text((numQuestions - curQuestion).toString(),
+            { fontFamily: "Arial", fontSize: 25, fill: "white"});
+        minisZone.addChild(progressImage);
+        progressImage.position.set(width * sizing * 0.8, -5);
+        minisZone.addChild(progressNumber);
+        progressNumber.position.set(width * sizing * 0.865, 4);
+        let minisText = new Text("Virus threat analysis!", { fontFamily: "Arial", fontSize: 20, fill: "black"});
+        minisZone.addChild(minisText);
+        minisText.position.set(30, 8);
         gameScene.addChild(minisZone);
+
+        // Add viruses
+        let curVirus = new Sprite(resources["images/temp_virus_guy01.png"].texture);
+        curVirus.width = 80;
+        curVirus.height = 75;
+        let curVirusName = "";
+        if (!!questions[curQuestion].virusName) {
+            curVirusName = questions[curQuestion].virusName
+        } else {
+            curVirusName = randomName();
+        }
+        let curVirusText = new Text(curVirusName, { fontFamily: "Arial", fontSize: 18, fill: "white" });
+        minisZone.addChild(curVirus);
+        curVirus.position.set(20, 30);
+        minisZone.addChild(curVirusText);
+        curVirusText.position.set(15, 100);
+
+
+        for (let i = 0; i < numQuestions - curQuestion - 1; i++) {
+            let virus = new Sprite(resources["images/temp_virus_guy_mini.png"].texture);
+            virus.width = 35;
+            virus.height = 30;
+            minisZone.addChild(virus);
+            virus.x = curVirus.x + curVirus.width + 50 + virus.width * i;
+            // need to account for wrapping
+            virus.y = curVirus.y + 20;
+        }
+
 
         // Create Prompt zone
         let promptZone = new Container();
@@ -120,13 +160,13 @@
         promptZone.addChild(alertImg);
         alertImg.position.set(5, -5);
 
-        let prompt = ""
+        let prompt = "";
         if (!!questions[curQuestion].prompt) {
             prompt = questions[curQuestion].prompt;
         } else {
             prompt = randomPrompt();
         }
-        let promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 15 });
+        promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 15 });
         promptZone.addChild(promptText);
         promptText.position.set(60, 2);
 
@@ -136,7 +176,7 @@
         answerText.x = width * sizing * 0.6;
         answerText.y = 13;
         promptZone.addChild(answerText);
-        promptZone.position.set(0, minisZone.y + minisZone.height - 2);
+        promptZone.position.set(0, minisZone.y + minisZone.height - 7);
         gameScene.addChild(promptZone);
 
         // Create Combo zone
@@ -272,9 +312,11 @@
             if (result === answer) {
                 resultText.style = { fill: "green" };
                 eqButton.clicked = false;
+                promptText.text = "Great job!";
             } else {
                 resultText.style = { fill: "red" };
                 eqButton.clicked = false;
+                promptText.text = "Virus spreading!";
                 // decrease battery bar
             }
             // wait a second and load next question

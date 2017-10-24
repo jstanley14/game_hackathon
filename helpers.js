@@ -225,12 +225,25 @@ function updateTime() {
 
 let prompts = [
     "Malicious process detected!\nID: ",
-    "Protect file!\nID: ",
+    "File under attack!\nID: ",
     "Error found!\nLine: ",
-    "Firewall under attack!\nClear port: ",
+    "Firewall under pressure!\nClear port: ",
     "Reset encryption key!\nNeeded: "
 ];
 
 function randomPrompt() {
     return prompts[randomInt(0, prompts.length - 1)];
+}
+
+let virusNames = [
+    "Byte Bandito",
+    "Wormy the Worm",
+    "Sassy Sasser",
+    "Colin Ficker",
+    "Crypt Locker",
+    "I am Not a Virus!"
+];
+
+function randomName() {
+    return virusNames[randomInt(0, virusNames.length - 1)];
 }

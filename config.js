@@ -8,7 +8,8 @@ let config = {
                 //opsOrder: [],
                 choices: [1, 2, 3, 4, 5, 6, 7, 8],
                 answer: 15,
-                prompt: "Malicious process detected!\nID: "
+                prompt: "Malicious process detected!\nID: ",
+                virusName: "Byte Bandito"
             },
         {
             ops: ["+", "*"],
