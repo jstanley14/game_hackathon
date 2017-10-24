@@ -222,3 +222,15 @@ function updateTime() {
     let d = new Date();
     time.text = d.toTimeString().slice(0, 5) + " " + d.toLocaleTimeString().slice(-2)
 }
+
+let prompts = [
+    "Malicious process detected!\nID: ",
+    "Protect file!\nID: ",
+    "Error found!\nLine: ",
+    "Firewall under attack!\nClear port: ",
+    "Reset encryption key!\nNeeded: "
+];
+
+function randomPrompt() {
+    return prompts[randomInt(0, prompts.length - 1)];
+}

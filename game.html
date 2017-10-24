@@ -12,7 +12,7 @@
 <script type="text/javascript">
 
     //Aliases
-    var Container = PIXI.Container,
+    let Container = PIXI.Container,
         autoDetectRenderer = PIXI.autoDetectRenderer,
         loader = PIXI.loader,
         resources = PIXI.loader.resources,
@@ -22,13 +22,13 @@
         Text = PIXI.Text,
         Graphics = PIXI.Graphics;
 
-    var width = 1080;
-    var height = 1920;
-    var sizing = 0.25;
+    let width = 1080;
+    let height = 1920;
+    let sizing = 0.25;
 
     //Create a Pixi stage and renderer and add the
     //renderer.view to the DOM
-    var stage = new Container(),
+    let stage = new Container(),
         renderer = autoDetectRenderer(width * sizing, height * sizing);
 
 
@@ -44,18 +44,25 @@
         .add("images/draggable_plus.png")
         .add("images/window_draggables.png")
         .add("images/phone_back_main.png")
+        .add("images/icon_alert.png")
+        .add("images/window_drop_zone.png")
+        .add("images/window_alert.png")
+        .add("images/window_virus_area.png")
+        .add("images/progress_number.png")
+        .add("images/temp_virus_guy01.png")
+        .add("images/temp_virus_guy_mini.png")
         //.add("images/treasureHunter.json")
         .load(setup);
 
     //Define variables that might be used in more
     //than one function
-    var state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
+    let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
         restartButton, resultText, message, gameScene, gameOverScene, enemies, id;
 
 
-    var questions = config.questions;
-    var numQuestions = questions.length;
-    var curQuestion = 0;
+    let questions = config.questions;
+    let numQuestions = questions.length;
+    let curQuestion = 0;
 
     function setup() {
         ticker = -1;
@@ -66,6 +73,12 @@
         //Make the sprites and add them to the `gameScene`
         //Create an alias for the texture atlas frame ids
         id = resources["images/bars_anim.json"].textures;
+
+        // Create background
+        let background = new Sprite(resources["images/phone_back_main.png"].texture);
+        background.width = width * sizing;
+        background.height = height * sizing;
+        gameScene.addChild(background);
 
         // Create top battery bar
         let topBar = new Container();
@@ -81,48 +94,58 @@
         topBar.addChild(time);
         gameScene.addChild(topBar);
 
+
         // Create Minis zone
         minisZone = new Container();
-        let minisFrame = new Graphics();
-        minisFrame.beginFill("0xFFFFFF");
-        minisFrame.lineStyle(4, "0x000000", 1);
-        minisFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
-        minisFrame.endFill();
-        minisZone.position.set(0, 24);
-        minisZone.addChild(minisFrame);
+        minisZone.y = topBar.height + 10;
+        let minisImg = new Sprite(resources["images/window_virus_area.png"].texture);
+        minisImg.width = width * sizing;
+        minisImg.height = height * sizing * 0.28;
+        minisZone.addChild(minisImg);
         gameScene.addChild(minisZone);
 
         // Create Prompt zone
         let promptZone = new Container();
-        let promptFrame = new Graphics();
-        promptFrame.beginFill("0xFFFFFF");
-        promptFrame.lineStyle(4, "0x000000", 1);
-        promptFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
-        promptFrame.endFill();
-        promptZone.addChild(promptFrame);
+        let promptImg = new Sprite(resources["images/window_alert.png"].texture);
+        promptImg.width = width * sizing;
+        promptImg.height = 60;
+        promptZone.addChild(promptImg);
         if (questions[curQuestion].answer !== undefined) {
             answer = questions[curQuestion].answer;
         } else {
             answer = randomInt(1, 50);
         }
-        //answer = randomInt(1, 50);
+        let alertImg = new Sprite(resources["images/icon_alert.png"].texture);
+        alertImg.width = alertImg.height = 60;
+        promptZone.addChild(alertImg);
+        alertImg.position.set(5, -5);
+
+        let prompt = ""
+        if (!!questions[curQuestion].prompt) {
+            prompt = questions[curQuestion].prompt;
+        } else {
+            prompt = randomPrompt();
+        }
+        let promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 15 });
+        promptZone.addChild(promptText);
+        promptText.position.set(60, 2);
+
+
         let answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 40, fill: "black"});
-        answerText.x = width * sizing * 0.4;
-        answerText.y = 20;
+        answerText.x = width * sizing * 0.6;
+        answerText.y = 13;
         promptZone.addChild(answerText);
-        promptZone.position.set(0, 120);
+        promptZone.position.set(0, minisZone.y + minisZone.height - 2);
         gameScene.addChild(promptZone);
 
         // Create Combo zone
         comboZone = new Container();
-        let comboFrame = new Graphics();
-        comboFrame.beginFill("0xFFFFFF");
-        comboFrame.lineStyle(4, "0x000000", 1);
-        comboFrame.drawRect(0, 0, width * sizing * 0.65, height * sizing * 0.1);
-        comboFrame.endFill();
-        comboZone.addChild(comboFrame);
-        comboZone.position.set(0, 230);
+        let comboImg = new Sprite(resources["images/window_drop_zone.png"].texture);
+        comboImg.width = width * sizing;
+        comboImg.height = 60;
+        comboZone.addChild(comboImg);
+        comboZone.position.set(0, 225);
         comboArea = new Text("",
             { fontFamily: "Arial", fontSize: 20, fill: "black" });
         comboArea.mathSeq = [];
@@ -138,18 +161,13 @@
         eqButton.on('click', function(evt) { eqButton.clicked = true; });
         comboZone.addChild(eqButton);
         eqButton.x = width * sizing * 0.65;
+        eqButton.y = 2;
 
         // Create Result zone (shows student result);
         let resultZone = new Container();
-        let resultFrame = new Graphics();
-        resultFrame.beginFill("0xFFFFFF");
-        resultFrame.drawRect(0, 0, width * sizing * 0.14, height * sizing * 0.1);
-        resultFrame.endFill();
-        resultFrame.x = width * sizing * 0.85;
-        resultZone.addChild(resultFrame);
-        resultText = new Text();
-        resultFrame.addChild(resultText);
-        resultText.position.set(5, 7);
+        resultText = new Text("?", { fontFamily: "Arial", fontSize: 30, fill: "black "});
+        resultZone.addChild(resultText);
+        resultText.position.set(width * sizing * 0.87, 10);
         comboZone.addChild(resultZone);
 
         // Create Options zone
