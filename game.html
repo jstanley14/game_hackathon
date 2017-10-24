@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Virus Fighter</title>
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.6/pixi.js"></script>
+<script src="pixi.js"></script>
 <script src="tink.js"></script>
 <script src="helpers.js"></script>
 <script src="config.js"></script>
@@ -51,6 +51,13 @@
         .add("images/progress_number.png")
         .add("images/temp_virus_guy01.png")
         .add("images/temp_virus_guy_mini.png")
+        .add("images/battery_state01.png")
+        .add("images/battery_state02.png")
+        .add("images/battery_state03.png")
+        .add("images/battery_state04.png")
+        .add("images/battery_state05.png")
+        .add("images/battery_state06.png")
+        .add("images/battery_state07.png")
         //.add("images/treasureHunter.json")
         .load(setup);
 
@@ -58,8 +65,9 @@
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
         restartButton, resultText, message, gameScene, gameOverScene, promptText,
-        progressNumber, id;
+        progressNumber, id, minisText;
 
+    let batteryNum = 1;
 
     let questions = config.questions;
     let numQuestions = questions.length;
@@ -83,13 +91,33 @@
 
         // Create top battery bar
         let topBar = new Container();
-        let battery = new Graphics();
-        battery.beginFill("0x15BC31");
-        battery.lineStyle(4, "0xFFFFFF", 1);
-        battery.drawRect(0, 0, 100, 20);
-        battery.endFill();
-        battery.position.set(168, 0);
+        let frames = [];
+        for (let i = 0; i < 493; i++) {
+            let val = "";
+            if (i < 10) {
+                val = "00" + i.toString();
+            } else if (i < 100) {
+                val = "0" + i.toString();
+            } else {
+                val = i.toString();
+            }
+            frames.push(Texture.fromFrame("bars0" + val))
+        }
+        let anim = new PIXI.extras.AnimatedSprite(frames);
+        topBar.addChild(anim);
+        anim.width = 25;
+        anim.height = 20;
+        anim.x = width * sizing * 0.64;
+        anim.y = 5;
+        anim.animationSpeed = 0.5;
+        anim.play();
+
+        let battery = new Sprite(resources["images/battery_state0" + batteryNum.toString() + ".png"].texture);
+        battery.width = 50;
+        battery.height = 20;
         topBar.addChild(battery);
+        battery.x = width * sizing * 0.78;
+        battery.y = 5;
         time = new Text("", { fontFamily: "Arial", fontSize: 16, fill: "white", fontWeight: "lighter"});
         time.position.set(5, 5);
         topBar.addChild(time);
@@ -111,7 +139,7 @@
         progressImage.position.set(width * sizing * 0.8, -5);
         minisZone.addChild(progressNumber);
         progressNumber.position.set(width * sizing * 0.865, 4);
-        let minisText = new Text("Virus threat analysis!", { fontFamily: "Arial", fontSize: 20, fill: "black"});
+        minisText = new Text("Virus threat analysis!", { fontFamily: "Arial", fontSize: 20, fill: "black"});
         minisZone.addChild(minisText);
         minisText.position.set(30, 8);
         gameScene.addChild(minisZone);
@@ -295,11 +323,16 @@
     }
 
     function play() {
-        // Answered all questions?
-        if (curQuestion === numQuestions) {
+        // Battery gone?
+        if (batteryNum > 6) {
+            message.text = "Battery drained!\nTry again?";
             state = done;
         }
-        // Battery gone?
+        // Answered all questions?
+        if (curQuestion === numQuestions) {
+            message.text = "A winner...\nis you!";
+            state = done;
+        }
 
 
         ticker++;
@@ -316,8 +349,10 @@
             } else {
                 resultText.style = { fill: "red" };
                 eqButton.clicked = false;
-                promptText.text = "Virus spreading!";
+                promptText.text = "The virus spreads!";
                 // decrease battery bar
+                batteryNum++;
+                minisText.text = "Battery impacted!"
             }
             // wait a second and load next question
             window.setTimeout(function() {
@@ -336,6 +371,7 @@
         if (restartButton.clicked) {
             gameOverScene.visible = false;
             curQuestion = 0;
+            batteryNum = 1;
             setup();
         }
     }

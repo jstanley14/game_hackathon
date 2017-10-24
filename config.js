@@ -21,6 +21,22 @@ let config = {
         {
             ops: [],
             choices: []
+        },
+        {
+            ops: [],
+            choices: []
+        },
+        {
+            ops: [],
+            choices: []
+        },
+        {
+            ops: [],
+            choices: []
+        },
+        {
+            ops: [],
+            choices: []
         }
     ]
 };

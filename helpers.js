@@ -236,11 +236,10 @@ function randomPrompt() {
 }
 
 let virusNames = [
-    "Byte Bandito",
     "Wormy the Worm",
     "Sassy Sasser",
     "Colin Ficker",
-    "Crypt Locker",
+    "Crypto Locker",
     "I am Not a Virus!"
 ];
 
