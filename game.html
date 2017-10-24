@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Hello World</title>
+    <title>Virus Fighter</title>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.6/pixi.js"></script>
 <script src="tink.js"></script>
@@ -21,8 +21,6 @@
         Text = PIXI.Text,
         Graphics = PIXI.Graphics;
 
-
-
     var width = 1080;
     var height = 1920;
     var sizing = 0.25;
@@ -36,23 +34,32 @@
     document.body.appendChild(renderer.view);
 
     loader
-        .add("images/treasureHunter.json")
+        .add("images/bars_anim.json")
+        .add("images/draggable_divide.png")
+        .add("images/draggable_equals.png")
+        .add("images/draggable_minus.png")
+        .add("images/draggable_multiply.png")
+        .add("images/draggable_num.png")
+        .add("images/draggable_plus.png")
+        .add("images/window_draggables.png")
+        .add("images/phone_back_main.png")
+        //.add("images/treasureHunter.json")
         .load(setup);
 
     //Define variables that might be used in more
     //than one function
-    var state, comboZone, comboArea, answer, goButton, minisZone, player, dungeon,
-        door, healthBar, message, gameScene, gameOverScene, enemies, id;
+    var state, comboZone, comboArea, answer, goButton, minisZone, time, ticker,
+        restartButton, healthBar, message, gameScene, gameOverScene, enemies, id;
 
     function setup() {                                                                                                                                                      [378/4306]
-
+        ticker = -1;
         //Make the game scene and add it to the stage
         gameScene = new Container();
         stage.addChild(gameScene);
 
         //Make the sprites and add them to the `gameScene`
         //Create an alias for the texture atlas frame ids
-        id = resources["images/treasureHunter.json"].textures;
+        id = resources["images/bars_anim.json"].textures;
 
         // Create top battery bar
         var topBar = new Container();
@@ -63,6 +70,9 @@
         battery.endFill();
         battery.position.set(168, 0);
         topBar.addChild(battery);
+        time = new Text("", { fontFamily: "Arial", fontSize: 10, fill: "white"});
+        time.position.set(5, 5);
+        topBar.addChild(time);
         gameScene.addChild(topBar);
 
         // Create Minis zone
@@ -105,6 +115,7 @@
         comboArea = new Text("",
             { fontFamily: "Arial", fontSize: 20, fill: "black" });
         comboArea.mathSeq = [];
+        comboArea.position.set(5, 13);
         comboZone.addChild(comboArea);
         gameScene.addChild(comboZone);
 
@@ -114,6 +125,10 @@
         goButton.lineStyle(4, "0x000000", 1);
         goButton.drawRect(0, 0, width * sizing * .2, comboZone.height);
         goButton.endFill();
+        goButton.moveTo(0, 0);
+        goButton.lineTo(goButton.width, goButton.height);
+        goButton.moveTo(0, goButton.height);
+        goButton.lineTo(goButton.width, 0);
         comboZone.addChild(goButton);
         goButton.x = comboZone.width - 4;
         goButton.interactive = true;
@@ -122,12 +137,16 @@
 
         // Create Options zone
         var optionsZone = new Container();
-        var optionsFrame = new Graphics();
-        optionsFrame.beginFill("0xFFFFFF");
-        optionsFrame.lineStyle(4, "0x000000", 1);
-        optionsFrame.drawRect(0, 0, width * sizing, height * sizing * 0.4);
-        optionsFrame.endFill();
-        optionsZone.addChild(optionsFrame);
+        var optionsImg = new Sprite(resources["images/window_draggables.png"].texture);
+        optionsImg.width = width * sizing;
+        optionsImg.height = height * sizing * 0.42;
+        optionsZone.addChild(optionsImg);
+//        var optionsFrame = new Graphics();
+//        optionsFrame.beginFill("0xFFFFFF");
+//        optionsFrame.lineStyle(4, "0x000000", 1);
+//        optionsFrame.drawRect(0, 0, width * sizing, height * sizing * 0.4);
+//        optionsFrame.endFill();
+//        optionsZone.addChild(optionsFrame);
         optionsZone.position.set(0, 280);
         gameScene.addChild(optionsZone);
 
@@ -138,8 +157,8 @@
         makeDraggable(numbers);
         makeDraggable(operators);
 
-        var leftOffset = 17;
-        var vertOffset = 20;
+        var leftOffset = 35;
+        var vertOffset = 40;
         var buttonSize = 47;
         var padding = 20;
         // Add number buttons.
@@ -176,12 +195,23 @@
         //Create the text sprite and add it to the `gameOver` scene
         message = new Text(
             "A winner...\n is you!",
-            {font: "30px Futura", fill: "white", align: "center"}
+            {fontFamily: "Futura", fontSize: 30, fill: "white", align: "center"}
         );
         message.x = stage.width / 4;
         message.y = stage.height / 2 - 32;
         gameOverScene.addChild(message);
 
+        restartButton = new Graphics();
+        restartButton.clicked = false;
+        restartButton.interactive = true;
+        restartButton.on('click', function(evt) { restartButton.clicked = true });
+        restartButton.beginFill("0xFFFFFF");
+        restartButton.lineStyle(1, "0xFFFFFF", 1);
+        restartButton.drawRect(0, 0, 150, 50);
+        restartButton.endFill();
+        restartButton.position.set(75, 300);
+        restartButton.addChild(new Text("Play again"));//, { fontFamily: "Arial", fontSize: 20, fill: "black", align: "center"}));
+        gameOverScene.addChild(restartButton);
         //Set the game state
         state = play;
 
@@ -196,6 +226,10 @@
     }
 
     function play() {
+        ticker++;
+        if (ticker % 60 === 0) {
+            updateTime();
+        }
         if (goButton.clicked && comboArea.mathSeq.length % 2 === 1) {
             var result = checkResult()
             if (result === answer) {
@@ -215,6 +249,10 @@
     function done() {
         gameScene.visible = false;
         gameOverScene.visible = true;
+        if (restartButton.clicked) {
+            gameOverScene.visible = false;
+            setup();
+        }
     }
 
 

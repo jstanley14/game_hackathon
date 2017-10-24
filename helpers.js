@@ -63,23 +63,17 @@ function createNumbers() {
     for (var i = 0; i < 8; i++) {
         var number = randomInt(1, 12);
         var text = new Text(number.toString(),
-            { fontFamily: "Arial", fontSize: 32, fill: "black" });
-        // Center text in frame.
-        if (number < 10) {
-            text.anchor.set(-0.5, 0)
-        }
-
+            { fontFamily: "Arial", fontSize: 32, fill: "white" });
         var button = new Container();
-        var buttonFrame = new Graphics();
-        buttonFrame.beginFill("0xFFFFFF");
-        buttonFrame.lineStyle(2, "0x000000", 1);
-        //buttonFrame.drawRect(0, 0, 36, 36);
-        buttonFrame.drawCircle(17, 17, 28);
-        buttonFrame.endFill();
-        buttonFrame.addChild(text);
-        button.addChild(buttonFrame);
+        var buttonImg = new Sprite(resources["images/draggable_num.png"].texture);
+        buttonImg.anchor.set(0.5);
+        text.anchor.set(0.5);
+        buttonImg.width = buttonImg.height = 60;
+        button.addChild(buttonImg);
         button.type = "number";
         button.value = number;
+        button.text = text.text;
+        button.addChild(text);
         numbers.push(button);
     }
     return numbers;
@@ -87,20 +81,31 @@ function createNumbers() {
 
 function createOperators() {
     var operators = [];
+    var img = "";
     ["+", "-", "*", "/"].forEach(function(symbol) {
-        var op = new Text(symbol,
-            { fontFamily: "Arial", fontSize: 32, fill: "black" });
-        op.anchor.set(-0.6, 0);
+        img = "images/";
         var button = new Container();
-        var buttonFrame = new Graphics();
-        buttonFrame.beginFill("0xFFFFFF");
-        buttonFrame.lineStyle(2, "0x000000", 1);
-        buttonFrame.drawRect(0, 0, 40, 40);
-        buttonFrame.endFill();
-        buttonFrame.addChild(op);
-        button.addChild(buttonFrame);
+        switch (symbol) {
+            case "+":
+                img += "draggable_plus.png";
+                break;
+            case "-":
+                img += "draggable_minus.png";
+                break;
+            case "*":
+                img += "draggable_multiply.png";
+                break;
+            case "/":
+                img += "draggable_divide.png";
+        }
+        console.log(img);
+        var buttonImg = new Sprite(resources[img].texture);
+        buttonImg.width = buttonImg.height = 55;
+        buttonImg.anchor.set(0.5);
+        button.addChild(buttonImg);
         button.type = "operator";
         button.value = symbol;
+        button.text = symbol;
         operators.push(button);
     });
     return operators;
@@ -169,7 +174,7 @@ function dropInComboArea(elm) {
 }
 
 function addToComboArea(elm) {
-    comboArea.text = comboArea.text + elm.children[0].children[0].text;
+    comboArea.text = comboArea.text + elm.text;
     comboArea.mathSeq.push({ type: elm.type, value: elm.value });
 }
 
@@ -206,4 +211,10 @@ function showSeq(seq) {
     seq.forEach(function(elm) {
         console.log(elm.type + "----" + elm.value.toString());
     })
+}
+
+//  HH:MM *M
+function updateTime() {
+    var d = new Date();
+    time.text = d.toTimeString().slice(0, 5) + " " + d.toLocaleTimeString().slice(-2)
 }
