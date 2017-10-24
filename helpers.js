@@ -58,20 +58,25 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function createNumbers() {
-    var numbers = [];
-    for (var i = 0; i < 8; i++) {
-        var number = randomInt(1, 12);
-        var text = new Text(number.toString(),
+function createNumbers(nums) {
+    let numbers = [];
+    if (nums.length === 0) {
+        for (let i = 0; i < 8; i++) {
+            nums[i] = randomInt(1, 12);
+        }
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+        let text = new Text(nums[i].toString(),
             { fontFamily: "Arial", fontSize: 32, fill: "white" });
-        var button = new Container();
-        var buttonImg = new Sprite(resources["images/draggable_num.png"].texture);
+        let button = new Container();
+        let buttonImg = new Sprite(resources["images/draggable_num.png"].texture);
         buttonImg.anchor.set(0.5);
         text.anchor.set(0.5);
         buttonImg.width = buttonImg.height = 60;
         button.addChild(buttonImg);
         button.type = "number";
-        button.value = number;
+        button.value = nums[i];
         button.text = text.text;
         button.addChild(text);
         numbers.push(button);
@@ -79,27 +84,26 @@ function createNumbers() {
     return numbers;
 }
 
-function createOperators() {
-    var operators = [];
-    var img = "";
-    ["+", "-", "*", "/"].forEach(function(symbol) {
-        img = "images/";
-        var button = new Container();
+function createOperators(ops) {
+    if (ops.length === 0) { ops = ["+", "-", "*", "/"] }
+    let operators = [];
+    let img = "";
+    ops.forEach(function(symbol) {
+        let button = new Container();
         switch (symbol) {
             case "+":
-                img += "draggable_plus.png";
+                img = "images/draggable_plus.png";
                 break;
             case "-":
-                img += "draggable_minus.png";
+                img = "images/draggable_minus.png";
                 break;
             case "*":
-                img += "draggable_multiply.png";
+                img = "images/draggable_multiply.png";
                 break;
             case "/":
-                img += "draggable_divide.png";
+                img = "images/draggable_divide.png";
         }
-        console.log(img);
-        var buttonImg = new Sprite(resources[img].texture);
+        let buttonImg = new Sprite(resources[img].texture);
         buttonImg.width = buttonImg.height = 55;
         buttonImg.anchor.set(0.5);
         button.addChild(buttonImg);
@@ -142,7 +146,7 @@ function onDragEnd() {
 
 function onDragMove() {
     if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
+        let newPosition = this.data.getLocalPosition(this.parent);
         this.position.x = newPosition.x;
         this.position.y = newPosition.y;
     }
@@ -179,8 +183,8 @@ function addToComboArea(elm) {
 }
 
 function checkResult() {
-    var seq = comboArea.mathSeq;
-    var idx = -1;
+    let seq = comboArea.mathSeq;
+    let idx = -1;
     // Want to evaluate result without using 'eval' function.
     // First sweep mathSeq for higher order operators
     while ((idx = seq.findIndex(function(elm) {
@@ -215,6 +219,6 @@ function showSeq(seq) {
 
 //  HH:MM *M
 function updateTime() {
-    var d = new Date();
+    let d = new Date();
     time.text = d.toTimeString().slice(0, 5) + " " + d.toLocaleTimeString().slice(-2)
 }

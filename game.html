@@ -7,6 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.6/pixi.js"></script>
 <script src="tink.js"></script>
 <script src="helpers.js"></script>
+<script src="config.js"></script>
 <body>
 <script type="text/javascript">
 
@@ -48,10 +49,15 @@
 
     //Define variables that might be used in more
     //than one function
-    var state, comboZone, comboArea, answer, goButton, minisZone, time, ticker,
-        restartButton, healthBar, message, gameScene, gameOverScene, enemies, id;
+    var state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
+        restartButton, resultText, message, gameScene, gameOverScene, enemies, id;
 
-    function setup() {                                                                                                                                                      [378/4306]
+
+    var questions = config.questions;
+    var numQuestions = questions.length;
+    var curQuestion = 0;
+
+    function setup() {
         ticker = -1;
         //Make the game scene and add it to the stage
         gameScene = new Container();
@@ -62,8 +68,8 @@
         id = resources["images/bars_anim.json"].textures;
 
         // Create top battery bar
-        var topBar = new Container();
-        var battery = new Graphics();
+        let topBar = new Container();
+        let battery = new Graphics();
         battery.beginFill("0x15BC31");
         battery.lineStyle(4, "0xFFFFFF", 1);
         battery.drawRect(0, 0, 100, 20);
@@ -77,7 +83,7 @@
 
         // Create Minis zone
         minisZone = new Container();
-        var minisFrame = new Graphics();
+        let minisFrame = new Graphics();
         minisFrame.beginFill("0xFFFFFF");
         minisFrame.lineStyle(4, "0x000000", 1);
         minisFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
@@ -87,15 +93,20 @@
         gameScene.addChild(minisZone);
 
         // Create Prompt zone
-        var promptZone = new Container();
-        var promptFrame = new Graphics();
+        let promptZone = new Container();
+        let promptFrame = new Graphics();
         promptFrame.beginFill("0xFFFFFF");
         promptFrame.lineStyle(4, "0x000000", 1);
         promptFrame.drawRect(0, 0, width * sizing, height * sizing * 0.2);
         promptFrame.endFill();
         promptZone.addChild(promptFrame);
-        answer = randomInt(1, 50);
-        var answerText = new Text(answer.toString(),
+        if (questions[curQuestion].answer !== undefined) {
+            answer = questions[curQuestion].answer;
+        } else {
+            answer = randomInt(1, 50);
+        }
+        //answer = randomInt(1, 50);
+        let answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 40, fill: "black"});
         answerText.x = width * sizing * 0.4;
         answerText.y = 20;
@@ -105,10 +116,10 @@
 
         // Create Combo zone
         comboZone = new Container();
-        var comboFrame = new Graphics();
+        let comboFrame = new Graphics();
         comboFrame.beginFill("0xFFFFFF");
         comboFrame.lineStyle(4, "0x000000", 1);
-        comboFrame.drawRect(0, 0, width * sizing * .8, height * sizing * 0.1);
+        comboFrame.drawRect(0, 0, width * sizing * 0.65, height * sizing * 0.1);
         comboFrame.endFill();
         comboZone.addChild(comboFrame);
         comboZone.position.set(0, 230);
@@ -119,52 +130,52 @@
         comboZone.addChild(comboArea);
         gameScene.addChild(comboZone);
 
-        // Setup Go Button (check combo.)
-        goButton = new Graphics();
-        goButton.beginFill("0xFFFFFF");
-        goButton.lineStyle(4, "0x000000", 1);
-        goButton.drawRect(0, 0, width * sizing * .2, comboZone.height);
-        goButton.endFill();
-        goButton.moveTo(0, 0);
-        goButton.lineTo(goButton.width, goButton.height);
-        goButton.moveTo(0, goButton.height);
-        goButton.lineTo(goButton.width, 0);
-        comboZone.addChild(goButton);
-        goButton.x = comboZone.width - 4;
-        goButton.interactive = true;
-        goButton.clicked = false;
-        goButton.on('click', function(evt) { goButton.clicked = true; });
+        // Setup Equals button (check result.)
+        eqButton = new Sprite(resources["images/draggable_equals.png"].texture);
+        eqButton.width = eqButton.height = 55;
+        eqButton.interactive = true;
+        eqButton.clicked = false;
+        eqButton.on('click', function(evt) { eqButton.clicked = true; });
+        comboZone.addChild(eqButton);
+        eqButton.x = width * sizing * 0.65;
+
+        // Create Result zone (shows student result);
+        let resultZone = new Container();
+        let resultFrame = new Graphics();
+        resultFrame.beginFill("0xFFFFFF");
+        resultFrame.drawRect(0, 0, width * sizing * 0.14, height * sizing * 0.1);
+        resultFrame.endFill();
+        resultFrame.x = width * sizing * 0.85;
+        resultZone.addChild(resultFrame);
+        resultText = new Text();
+        resultFrame.addChild(resultText);
+        resultText.position.set(5, 7);
+        comboZone.addChild(resultZone);
 
         // Create Options zone
-        var optionsZone = new Container();
-        var optionsImg = new Sprite(resources["images/window_draggables.png"].texture);
+        let optionsZone = new Container();
+        let optionsImg = new Sprite(resources["images/window_draggables.png"].texture);
         optionsImg.width = width * sizing;
         optionsImg.height = height * sizing * 0.42;
         optionsZone.addChild(optionsImg);
-//        var optionsFrame = new Graphics();
-//        optionsFrame.beginFill("0xFFFFFF");
-//        optionsFrame.lineStyle(4, "0x000000", 1);
-//        optionsFrame.drawRect(0, 0, width * sizing, height * sizing * 0.4);
-//        optionsFrame.endFill();
-//        optionsZone.addChild(optionsFrame);
         optionsZone.position.set(0, 280);
         gameScene.addChild(optionsZone);
 
-        var numbers = createNumbers();
-        var operators = createOperators();
+        let numbers = createNumbers(questions[curQuestion].choices);
+        let operators = createOperators(questions[curQuestion].ops);
 
         // Init draggable functionality on buttons.
         makeDraggable(numbers);
         makeDraggable(operators);
 
-        var leftOffset = 35;
-        var vertOffset = 40;
-        var buttonSize = 47;
-        var padding = 20;
+        let leftOffset = 35;
+        let vertOffset = 40;
+        let buttonSize = 47;
+        let padding = 20;
         // Add number buttons.
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < numbers.length; i++) {
             optionsZone.addChild(numbers[i]);
-            var x, y;
+            let x, y;
             if (i < 4) {
                 x = leftOffset + i * (buttonSize + padding);
                 y = vertOffset;
@@ -177,10 +188,10 @@
             numbers[i].origPosition = {x: x, y: y };
         }
         // Add operator buttons.
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < operators.length; i++) {
             optionsZone.addChild(operators[i]);
-            var x = leftOffset + i * (buttonSize + padding);
-            var y = vertOffset + 2 * (buttonSize + padding) - 10;
+            let x = leftOffset + i * (buttonSize + padding);
+            let y = vertOffset + 2 * (buttonSize + padding) - 10;
             operators[i].position.set(x, y);
             operators[i].origPosition = {x: x, y: y };
         }
@@ -210,7 +221,7 @@
         restartButton.drawRect(0, 0, 150, 50);
         restartButton.endFill();
         restartButton.position.set(75, 300);
-        restartButton.addChild(new Text("Play again"));//, { fontFamily: "Arial", fontSize: 20, fill: "black", align: "center"}));
+        restartButton.addChild(new Text("Play again"));
         gameOverScene.addChild(restartButton);
         //Set the game state
         state = play;
@@ -226,23 +237,36 @@
     }
 
     function play() {
+        // Answered all questions?
+        if (curQuestion === numQuestions) {
+            state = done;
+        }
+        // Battery gone?
+
+
         ticker++;
         if (ticker % 60 === 0) {
             updateTime();
         }
-        if (goButton.clicked && comboArea.mathSeq.length % 2 === 1) {
-            var result = checkResult()
+        if (eqButton.clicked && comboArea.mathSeq.length % 2 === 1) {
+            let result = checkResult();
+            resultText.text = result.toString();
             if (result === answer) {
-                state = done;
+                resultText.style = { fill: "green" };
+                eqButton.clicked = false;
             } else {
-                var text = new Text("MATH ERROR!!!  " + result.toString());
-                text.x = 20;
-                text.y = minisZone.y;
-                minisZone.addChild(text);
-                goButton.clicked = false;
+                resultText.style = { fill: "red" };
+                eqButton.clicked = false;
+                // decrease battery bar
             }
+            // wait a second and load next question
+            window.setTimeout(function() {
+                curQuestion++;
+                gameScene.visible = false;
+                setup();
+            }, 2000)
         } else {
-            goButton.clicked = false;
+            eqButton.clicked = false;
         }
     }
 
@@ -251,6 +275,7 @@
         gameOverScene.visible = true;
         if (restartButton.clicked) {
             gameOverScene.visible = false;
+            curQuestion = 0;
             setup();
         }
     }
