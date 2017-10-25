@@ -61,12 +61,25 @@
         .add("images/target_number_box.png")
         .add("images/outline_mockup.png")
         .add("images/window_combo.png")
+        .add("images/button_help.png")
+        .add("images/button_okay.png")
+        .add("images/button_remove_virus.png")
+        .add("images/button_try_again.png")
+        .add("images/game_title.png")
+        .add("images/home_screen.png")
+        .add("images/home_screen_dark.png")
+        .add("images/popup_instructions.png")
+        .add("images/popup_virus_warning.png")
+        .add("images/popup_you_lose.png")
+        .add("images/popup_you_win.png")
+        .add("images/virus_guy_beaten.png")
+        .add("images/virus_guy_hello.png")
         .load(setup);
 
     //Define variables that might be used in more
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
-        restartButton, resultText, message, gameScene, gameOverScene, promptText,
+        tryAgainBtn, resultText, gameScene, gameOverScene, promptText,
         progressNumber, id, minisText;
 
     let batteryNum = 1;
@@ -114,6 +127,13 @@
         anim.animationSpeed = 0.5;
         anim.play();
 
+        let helpButton = new Sprite(resources["images/button_help.png"].texture);
+        helpButton.height = helpButton.width = 70;
+        topBar.addChild(helpButton);
+        helpButton.position.set(width * sizing * 0.45, 25 * sizing);
+        helpButton.interactive = true;
+        helpButton.clicked = false;
+
         let battery = new Sprite(resources["images/battery_state0" + batteryNum.toString() + ".png"].texture);
         battery.width = 180 * sizing;
         battery.height = 80 * sizing;
@@ -134,14 +154,6 @@
         minisImg.width = width * sizing;
         minisImg.height = height * sizing * 0.31;
         minisZone.addChild(minisImg);
-        //let progressImage = new Sprite(resources["images/progress_number.png"].texture);
-        //progressImage.height = progressImage.width = 50;
-//        progressNumber = new Text((numQuestions - curQuestion).toString(),
-//            { fontFamily: "Arial", fontSize: 25, fill: "white"});
-        //minisZone.addChild(progressImage);
-//        progressImage.position.set(width * sizing * 0.8, -5);
-//        minisZone.addChild(progressNumber);
-//        progressNumber.position.set(width * sizing * 0.865, 4);
         minisText = new Text("Virus Analysis",
             { fontFamily: "Arial", fontSize: 65 * sizing, fill: "black"});
         minisZone.addChild(minisText);
@@ -212,7 +224,7 @@
         answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
 
         let answerText = new Text(answer.toString(),
-            { fontFamily: "Arial", fontSize: 100, fill: "black"});
+            { fontFamily: "Arial", fontSize: 140, fill: "white"});
         answerBox.addChild(answerText);
         let anchor = anchorProps(answer.toString());
         answerText.anchor.set(anchor.x, anchor.y);
@@ -310,27 +322,23 @@
 
         //Make the `gameOver` scene invisible when the game first starts
         gameOverScene.visible = false;
+        let gameOverScreenBackground = new Sprite(resources["images/home_screen_dark.png"].texture);
+        gameOverScene.addChild(gameOverScreenBackground);
+        let gameOverPrompt = new Sprite(resources["images/popup_you_lose.png"].texture);
+        gameOverScene.addChild(gameOverPrompt);
+        let alertIcon = new Sprite(resources["images/icon_alert.png"].texture);
+        gameOverPrompt.addChild(alertIcon);
+        tryAgainBtn = new Sprite(resources["images/button_try_again.png"].texture);
+        gameOverPrompt.addChild(tryAgainBtn);
+        tryAgainBtn.clicked = false;
+        tryAgainBtn.interactive = true;
+        tryAgainBtn.on('click', function(evt) { tryAgainBtn.clicked = true });
+        gameOverPrompt.position.set(20 * sizing, 360 * sizing);
+        tryAgainBtn.width = 500 * sizing;
+        tryAgainBtn.height = 160 * sizing;
+        tryAgainBtn.position.set(250 * sizing, 330 * sizing);
+        alertIcon.position.set(20 * sizing, -20 * sizing);
 
-        //Create the text sprite and add it to the `gameOver` scene
-        message = new Text(
-            "A winner...\n is you!",
-            {fontFamily: "Futura", fontSize: 30, fill: "white", align: "center"}
-        );
-        message.x = stage.width / 4;
-        message.y = stage.height / 2 - 32;
-        gameOverScene.addChild(message);
-
-        restartButton = new Graphics();
-        restartButton.clicked = false;
-        restartButton.interactive = true;
-        restartButton.on('click', function(evt) { restartButton.clicked = true });
-        restartButton.beginFill("0xFFFFFF");
-        restartButton.lineStyle(1, "0xFFFFFF", 1);
-        restartButton.drawRect(0, 0, 150, 50);
-        restartButton.endFill();
-        restartButton.position.set(75, 300);
-        restartButton.addChild(new Text("Play again"));
-        gameOverScene.addChild(restartButton);
         //Set the game state
         state = play;
 
@@ -346,14 +354,14 @@
 
     function play() {
         // Battery gone?
-        if (batteryNum > 6) {
-            message.text = "Battery drained!\nTry again?";
-            state = done;
+        if (batteryNum > 1) {
+            //message.text = "Battery drained!\nTry again?";
+            state = lose;
         }
         // Answered all questions?
         if (curQuestion === numQuestions) {
-            message.text = "A winner...\nis you!";
-            state = done;
+            //message.text = "A winner...\nis you!";
+            state = win;
         }
 
 
@@ -379,14 +387,14 @@
                 resultText.style =  { fontFamily: "Arial", fontSize: 140 * sizing, fill: "red "};
                 eqButton.clicked = false;
                 promptText.text = "The virus spreads!";
-                // decrease battery bar
                 batteryNum++;
                 minisText.text = "Battery impacted!"
             }
             // wait a second and load next question
             window.setTimeout(function() {
                 curQuestion++;
-                gameScene.visible = false;
+                //gameScene.visible = false;
+                stage.removeChild(gameScene);
                 setup();
             }, 2000)
         } else {
@@ -394,10 +402,14 @@
         }
     }
 
-    function done() {
+    function win() {
+
+    }
+
+    function lose() {
         gameScene.visible = false;
         gameOverScene.visible = true;
-        if (restartButton.clicked) {
+        if (tryAgainBtn.clicked) {
             gameOverScene.visible = false;
             curQuestion = 0;
             batteryNum = 1;
