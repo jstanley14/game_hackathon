@@ -211,21 +211,18 @@
         promptZone.addChild(answerBox);
         answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
 
-
         let answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 100, fill: "black"});
         answerBox.addChild(answerText);
-        answerText.anchor.set(-0.3);
+        let anchor = anchorProps(answer.toString());
+        answerText.anchor.set(anchor.x, anchor.y);
         gameScene.addChild(promptZone);
         promptZone.position.set(0, minisZone.y + minisZone.height - 7);
 
         // Create Combo zone
         comboZone = new Container();
         let comboRect = new Graphics();
-        //comboRect.lineStyle(1, 0x99CCFF, 1);
-        //comboRect.beginFill(0xFF9933);
         comboRect.drawRoundedRect(0, 0, 588, 188, 40); // one on right is 188x188
-        //comboRect.endFill();
         comboZone.addChild(comboRect);
         comboRect.x = 45 * sizing;
         comboArea = new Text("",
@@ -248,11 +245,14 @@
 
         // Create Result zone (shows student result);
         let resultZone = new Container();
+        let resultRect = new Graphics();
+        resultRect.drawRoundedRect(0, 0, 188, 188, 40);
+        resultZone.addChild(resultRect);
+        resultZone.position.set(width * sizing * 0.87, 60 * sizing);
         resultText = new Text("?",
             { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "});
-        resultText.anchor.set(0.3);
         resultZone.addChild(resultText);
-        resultText.position.set(width * sizing * 0.87, 60 * sizing);
+        resultText.anchor.set(0.4, 0.3);
         comboZone.addChild(resultZone);
 
         // Create Options zone
@@ -261,7 +261,7 @@
         optionsImg.width = width * sizing;
         optionsImg.height = height * sizing * 0.35;
         optionsZone.addChild(optionsImg);
-        optionsZone.position.set(0, comboZone.y + comboZone.height + 20 * sizing);
+        optionsZone.position.set(0, comboZone.y + comboZone.height - 20 * sizing);
         gameScene.addChild(optionsZone);
 
         let numbers = createNumbers(questions[curQuestion].choices);
@@ -300,7 +300,8 @@
             operators[i].origPosition = {x: operators[i].x, y: operators[i].y };
         }
 
-        let wireframe = new Sprite(resources["images/outline_mockup.png"].texture);
+        // For graphical positioning assistance.
+        //let wireframe = new Sprite(resources["images/outline_mockup.png"].texture);
         //gameScene.addChild(wireframe);
 
         //Create the `gameOver` scene
@@ -363,6 +364,13 @@
         if (eqButton.clicked && comboArea.mathSeq.length % 2 === 1) {
             let result = checkResult();
             resultText.text = result.toString();
+            if (result.toString().length === 1) {
+                resultText.anchor.set(0.4, 0.3);
+            } else if (result.toString().length === 2) {
+                resultText.anchor.set(0.5, 0.3);
+            } else {
+                resultText.anchor.set(0.4, 0.3);
+            }
             if (result === answer) {
                 resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "green"};
                 eqButton.clicked = false;

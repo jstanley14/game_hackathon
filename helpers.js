@@ -245,3 +245,14 @@ let virusNames = [
 function randomName() {
     return virusNames[randomInt(0, virusNames.length - 1)];
 }
+
+// For centering text based on length - assumes 1, 2, or 3.
+function anchorProps(text) {
+    if (text.length === 3) {
+        return { x: -0.1, y: -0.3 };
+    } else if (text.length === 2) {
+        return { x: -0.3, y: -0.3 };
+    } else {
+        return { x: -1.1, y: -0.4 }
+    }
+}
