@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Virus Fighter</title>
+    <title>Malware Math</title>
 </head>
 <script src="pixi.js"></script>
 <script src="tink.js"></script>
@@ -24,7 +24,7 @@
 
     let width = 1080;
     let height = 1920;
-    let sizing = 0.25;
+    let sizing = 1;
 
     //Create a Pixi stage and renderer and add the
     //renderer.view to the DOM
@@ -58,7 +58,9 @@
         .add("images/battery_state05.png")
         .add("images/battery_state06.png")
         .add("images/battery_state07.png")
-        //.add("images/treasureHunter.json")
+        .add("images/target_number_box.png")
+        .add("images/outline_mockup.png")
+        .add("images/window_combo.png")
         .load(setup);
 
     //Define variables that might be used in more
@@ -105,80 +107,82 @@
         }
         let anim = new PIXI.extras.AnimatedSprite(frames);
         topBar.addChild(anim);
-        anim.width = 25;
-        anim.height = 20;
-        anim.x = width * sizing * 0.64;
-        anim.y = 5;
+        anim.width = 100 * sizing;
+        anim.height = 80 * sizing;
+        anim.x = width * sizing * 0.67;
+        anim.y = 20 * sizing;
         anim.animationSpeed = 0.5;
         anim.play();
 
         let battery = new Sprite(resources["images/battery_state0" + batteryNum.toString() + ".png"].texture);
-        battery.width = 50;
-        battery.height = 20;
+        battery.width = 180 * sizing;
+        battery.height = 80 * sizing;
         topBar.addChild(battery);
-        battery.x = width * sizing * 0.78;
-        battery.y = 5;
-        time = new Text("", { fontFamily: "Arial", fontSize: 16, fill: "white", fontWeight: "lighter"});
-        time.position.set(5, 5);
+        battery.x = width * sizing * 0.8;
+        battery.y = 20 * sizing;
+        time = new Text("",
+            { fontFamily: "Arial", fontSize: 50 * sizing , fill: "white", fontWeight: "lighter"});
+        time.position.set(30 * sizing, 30 * sizing);
         topBar.addChild(time);
         gameScene.addChild(topBar);
 
 
         // Create Minis zone
         minisZone = new Container();
-        minisZone.y = topBar.height + 10;
+        minisZone.y = topBar.height + 70 * sizing;
         let minisImg = new Sprite(resources["images/window_virus_area.png"].texture);
         minisImg.width = width * sizing;
-        minisImg.height = height * sizing * 0.28;
+        minisImg.height = height * sizing * 0.31;
         minisZone.addChild(minisImg);
-        let progressImage = new Sprite(resources["images/progress_number.png"].texture);
-        progressImage.height = progressImage.width = 50;
-        progressNumber = new Text((numQuestions - curQuestion).toString(),
-            { fontFamily: "Arial", fontSize: 25, fill: "white"});
-        minisZone.addChild(progressImage);
-        progressImage.position.set(width * sizing * 0.8, -5);
-        minisZone.addChild(progressNumber);
-        progressNumber.position.set(width * sizing * 0.865, 4);
-        minisText = new Text("Virus threat analysis!", { fontFamily: "Arial", fontSize: 20, fill: "black"});
+        //let progressImage = new Sprite(resources["images/progress_number.png"].texture);
+        //progressImage.height = progressImage.width = 50;
+//        progressNumber = new Text((numQuestions - curQuestion).toString(),
+//            { fontFamily: "Arial", fontSize: 25, fill: "white"});
+        //minisZone.addChild(progressImage);
+//        progressImage.position.set(width * sizing * 0.8, -5);
+//        minisZone.addChild(progressNumber);
+//        progressNumber.position.set(width * sizing * 0.865, 4);
+        minisText = new Text("Virus Analysis",
+            { fontFamily: "Arial", fontSize: 65 * sizing, fill: "black"});
         minisZone.addChild(minisText);
-        minisText.position.set(30, 8);
+        minisText.position.set(325 * sizing, 36 * sizing);
         gameScene.addChild(minisZone);
 
         // Add viruses
         let curVirus = new Sprite(resources["images/temp_virus_guy01.png"].texture);
-        curVirus.width = 80;
-        curVirus.height = 75;
+        curVirus.width = 310 * sizing;
+        curVirus.height = 290 * sizing;
         let curVirusName = "";
         if (!!questions[curQuestion].virusName) {
             curVirusName = questions[curQuestion].virusName
         } else {
             curVirusName = randomName();
         }
-        let curVirusText = new Text(curVirusName, { fontFamily: "Arial", fontSize: 18, fill: "white" });
+        let curVirusText = new Text(curVirusName,
+            { fontFamily: "Arial", fontSize: 56, fill: "white" });
         minisZone.addChild(curVirus);
-        curVirus.position.set(20, 30);
+        curVirus.position.set(95 * sizing, 130 * sizing);
         minisZone.addChild(curVirusText);
-        curVirusText.position.set(15, 100);
+        curVirusText.position.set(85 * sizing, 485 * sizing);
 
-
+        // Layout bottom row first, right to left.
         for (let i = 0; i < numQuestions - curQuestion - 1; i++) {
             let virus = new Sprite(resources["images/temp_virus_guy_mini.png"].texture);
-            virus.width = 35;
-            virus.height = 30;
+            virus.width = 130 * sizing;
+            virus.height = 115 * sizing;
             minisZone.addChild(virus);
-            let multiple = Math.floor(i / 4);
-            virus.x = curVirus.x + curVirus.width + 20 + virus.width * (i % 4);
-
-            console.log(multiple);
-            virus.y = curVirus.y + 20 + multiple * 30;
+            let curLine = Math.floor(i / 4);
+            let curPos = i % 4;
+            virus.x = minisZone.width - 190 * sizing - virus.width * curPos;
+            virus.y = 300 - 120 * sizing - (virus.height * (curLine - 1));
         }
 
 
         // Create Prompt zone
         let promptZone = new Container();
-        let promptImg = new Sprite(resources["images/window_alert.png"].texture);
+        let promptImg = new Sprite(resources["images/window_combo.png"].texture);
         promptImg.width = width * sizing;
-        promptImg.height = 60;
+        promptImg.height = 500 * sizing;
         promptZone.addChild(promptImg);
         if (questions[curQuestion].answer !== undefined) {
             answer = questions[curQuestion].answer;
@@ -186,9 +190,9 @@
             answer = randomInt(1, 50);
         }
         let alertImg = new Sprite(resources["images/icon_alert.png"].texture);
-        alertImg.width = alertImg.height = 60;
+        alertImg.width = alertImg.height = 140 * sizing;
         promptZone.addChild(alertImg);
-        alertImg.position.set(5, -5);
+        alertImg.position.set(35 * sizing, 60 * sizing);
 
         let prompt = "";
         if (!!questions[curQuestion].prompt) {
@@ -196,57 +200,68 @@
         } else {
             prompt = randomPrompt();
         }
-        promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 15 });
+        promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 50 * sizing });
         promptZone.addChild(promptText);
-        promptText.position.set(60, 2);
+        promptText.position.set(200 * sizing, 80 * sizing);
+
+        let answerBox = new Container();
+        let answerBoxImg = new Sprite(resources["images/target_number_box.png"].texture);
+        answerBoxImg.width = answerBox.height = 200 * sizing;
+        answerBox.addChild(answerBoxImg);
+        promptZone.addChild(answerBox);
+        answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
 
 
         let answerText = new Text(answer.toString(),
-            { fontFamily: "Arial", fontSize: 40, fill: "black"});
-        answerText.x = width * sizing * 0.6;
-        answerText.y = 13;
-        promptZone.addChild(answerText);
-        promptZone.position.set(0, minisZone.y + minisZone.height - 7);
+            { fontFamily: "Arial", fontSize: 100, fill: "black"});
+        answerBox.addChild(answerText);
+        answerText.anchor.set(-0.3);
         gameScene.addChild(promptZone);
+        promptZone.position.set(0, minisZone.y + minisZone.height - 7);
 
         // Create Combo zone
         comboZone = new Container();
-        let comboImg = new Sprite(resources["images/window_drop_zone.png"].texture);
-        comboImg.width = width * sizing;
-        comboImg.height = 60;
-        comboZone.addChild(comboImg);
-        comboZone.position.set(0, 225);
+        let comboRect = new Graphics();
+        //comboRect.lineStyle(1, 0x99CCFF, 1);
+        //comboRect.beginFill(0xFF9933);
+        comboRect.drawRoundedRect(0, 0, 588, 188, 40); // one on right is 188x188
+        //comboRect.endFill();
+        comboZone.addChild(comboRect);
+        comboRect.x = 45 * sizing;
         comboArea = new Text("",
-            { fontFamily: "Arial", fontSize: 20, fill: "black" });
+            { fontFamily: "Arial", fontSize: 140, fill: "black" });
         comboArea.mathSeq = [];
-        comboArea.position.set(5, 13);
         comboZone.addChild(comboArea);
+        comboArea.position.set(25 * sizing, 13 * sizing);
         gameScene.addChild(comboZone);
+        comboZone.y = promptZone.y + promptZone.height - comboZone.height - 40 * sizing;
 
         // Setup Equals button (check result.)
         eqButton = new Sprite(resources["images/draggable_equals.png"].texture);
-        eqButton.width = eqButton.height = 55;
+        eqButton.width = eqButton.height = 210 * sizing;
         eqButton.interactive = true;
         eqButton.clicked = false;
         eqButton.on('click', function(evt) { eqButton.clicked = true; });
         comboZone.addChild(eqButton);
-        eqButton.x = width * sizing * 0.65;
-        eqButton.y = 2;
+        eqButton.x = comboRect.x + comboRect.width + 5 * sizing;
+        eqButton.y = -10 * sizing;
 
         // Create Result zone (shows student result);
         let resultZone = new Container();
-        resultText = new Text("?", { fontFamily: "Arial", fontSize: 30, fill: "black "});
+        resultText = new Text("?",
+            { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "});
+        resultText.anchor.set(0.3);
         resultZone.addChild(resultText);
-        resultText.position.set(width * sizing * 0.87, 10);
+        resultText.position.set(width * sizing * 0.87, 60 * sizing);
         comboZone.addChild(resultZone);
 
         // Create Options zone
         let optionsZone = new Container();
         let optionsImg = new Sprite(resources["images/window_draggables.png"].texture);
         optionsImg.width = width * sizing;
-        optionsImg.height = height * sizing * 0.42;
+        optionsImg.height = height * sizing * 0.35;
         optionsZone.addChild(optionsImg);
-        optionsZone.position.set(0, 280);
+        optionsZone.position.set(0, comboZone.y + comboZone.height + 20 * sizing);
         gameScene.addChild(optionsZone);
 
         let numbers = createNumbers(questions[curQuestion].choices);
@@ -256,33 +271,37 @@
         makeDraggable(numbers);
         makeDraggable(operators);
 
-        let leftOffset = 35;
-        let vertOffset = 40;
-        let buttonSize = 47;
-        let padding = 20;
-        // Add number buttons.
+        let numbersPane = new Container();
+        optionsZone.addChild(numbersPane);
+        numbersPane.y = 5 * sizing;
+        let leftOffset = 140 * sizing;
+        let vertOffset = 120 * sizing;
+        // 3x3 grid, max 9 buttons (w/o weirdness.)
         for (let i = 0; i < numbers.length; i++) {
-            optionsZone.addChild(numbers[i]);
-            let x, y;
-            if (i < 4) {
-                x = leftOffset + i * (buttonSize + padding);
-                y = vertOffset;
+            let curLine = Math.floor(i / 3);
+            let curPos = i % 3;
+            numbersPane.addChild(numbers[i]);
+            numbers[i].x = leftOffset + curPos * numbers[i].width - (10 * sizing * curPos);
+            numbers[i].y = vertOffset + curLine * numbers[i].height - (6 * sizing * curLine);
+            numbers[i].origPosition = {x: numbers[i].x, y: numbers[i].y }
+        }
 
-            } else {
-                x = leftOffset + (i - 4) * (buttonSize + padding);
-                y = vertOffset + buttonSize + padding;
-            }
-            numbers[i].position.set(x, y);
-            numbers[i].origPosition = {x: x, y: y };
-        }
-        // Add operator buttons.
+        let opsPane = new Container();
+        optionsZone.addChild(opsPane);
+        opsPane.y = 5 * sizing;
+        opsPane.x = numbersPane.width + numbersPane.x - 10 * sizing;
+        // Default 4, max 6.
         for (let i = 0; i < operators.length; i++) {
-            optionsZone.addChild(operators[i]);
-            let x = leftOffset + i * (buttonSize + padding);
-            let y = vertOffset + 2 * (buttonSize + padding) - 10;
-            operators[i].position.set(x, y);
-            operators[i].origPosition = {x: x, y: y };
+            let curLine = Math.floor(i / 2);
+            let curPos = i % 2;
+            opsPane.addChild(operators[i]);
+            operators[i].x = leftOffset + curPos * operators[i].width - (5 * curPos);
+            operators[i].y = vertOffset + curLine * operators[i].height; //+ (5 * curLine);
+            operators[i].origPosition = {x: operators[i].x, y: operators[i].y };
         }
+
+        let wireframe = new Sprite(resources["images/outline_mockup.png"].texture);
+        //gameScene.addChild(wireframe);
 
         //Create the `gameOver` scene
         gameOverScene = new Container();
@@ -345,11 +364,11 @@
             let result = checkResult();
             resultText.text = result.toString();
             if (result === answer) {
-                resultText.style = { fill: "green" };
+                resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "green"};
                 eqButton.clicked = false;
                 promptText.text = "Great job!";
             } else {
-                resultText.style = { fill: "red" };
+                resultText.style =  { fontFamily: "Arial", fontSize: 140 * sizing, fill: "red "};
                 eqButton.clicked = false;
                 promptText.text = "The virus spreads!";
                 // decrease battery bar

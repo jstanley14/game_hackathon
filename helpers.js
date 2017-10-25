@@ -53,7 +53,6 @@ function hitTestRectangle(r1, r2) {
     return hit;
 };
 
-//The `randomInt` helper function
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -68,12 +67,12 @@ function createNumbers(nums) {
 
     for (let i = 0; i < nums.length; i++) {
         let text = new Text(nums[i].toString(),
-            { fontFamily: "Arial", fontSize: 32, fill: "white" });
+            { fontFamily: "Arial", fontSize: 140 * sizing, fill: "white" });
         let button = new Container();
         let buttonImg = new Sprite(resources["images/draggable_num.png"].texture);
         buttonImg.anchor.set(0.5);
         text.anchor.set(0.5);
-        buttonImg.width = buttonImg.height = 60;
+        buttonImg.width = buttonImg.height = 210 * sizing;
         button.addChild(buttonImg);
         button.type = "number";
         button.value = nums[i];
@@ -104,7 +103,7 @@ function createOperators(ops) {
                 img = "images/draggable_divide.png";
         }
         let buttonImg = new Sprite(resources[img].texture);
-        buttonImg.width = buttonImg.height = 55;
+        buttonImg.width = buttonImg.height = 210 * sizing;
         buttonImg.anchor.set(0.5);
         button.addChild(buttonImg);
         button.type = "operator";
