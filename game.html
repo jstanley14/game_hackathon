@@ -80,7 +80,8 @@
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
         tryAgainBtn, resultText, gameScene, gameOverScene, promptText,
-        progressNumber, id, minisText;
+        batteries, id, minisText, curVirusText, answerText, numbersPane, opsPane,
+        optionsZone;
 
     let batteryNum = 1;
 
@@ -134,12 +135,17 @@
         helpButton.interactive = true;
         helpButton.clicked = false;
 
-        let battery = new Sprite(resources["images/battery_state0" + batteryNum.toString() + ".png"].texture);
-        battery.width = 180 * sizing;
-        battery.height = 80 * sizing;
-        topBar.addChild(battery);
-        battery.x = width * sizing * 0.8;
-        battery.y = 20 * sizing;
+        batteries = [];
+        for (let i = 1; i < 8; i++) {
+            batteries[i] = new Sprite(resources["images/battery_state0" + i.toString() + ".png"].texture);
+            batteries[i].width = 180 * sizing;
+            batteries[i].height = 80 * sizing;
+            batteries[i].visible = false;
+            topBar.addChild(batteries[i]);
+            batteries[i].x = width * sizing * 0.8;
+            batteries[i].y = 20 * sizing;
+        }
+        batteries[1].visible = true;
         time = new Text("",
             { fontFamily: "Arial", fontSize: 50 * sizing , fill: "white", fontWeight: "lighter"});
         time.position.set(30 * sizing, 30 * sizing);
@@ -164,13 +170,8 @@
         let curVirus = new Sprite(resources["images/temp_virus_guy01.png"].texture);
         curVirus.width = 310 * sizing;
         curVirus.height = 290 * sizing;
-        let curVirusName = "";
-        if (!!questions[curQuestion].virusName) {
-            curVirusName = questions[curQuestion].virusName
-        } else {
-            curVirusName = randomName();
-        }
-        let curVirusText = new Text(curVirusName,
+
+        curVirusText = new Text(getCurVirusName(),
             { fontFamily: "Arial", fontSize: 56, fill: "white" });
         minisZone.addChild(curVirus);
         curVirus.position.set(95 * sizing, 130 * sizing);
@@ -180,6 +181,7 @@
         // Layout bottom row first, right to left.
         for (let i = 0; i < numQuestions - curQuestion - 1; i++) {
             let virus = new Sprite(resources["images/temp_virus_guy_mini.png"].texture);
+            virus.isMiniVirus = true;
             virus.width = 130 * sizing;
             virus.height = 115 * sizing;
             minisZone.addChild(virus);
@@ -196,11 +198,7 @@
         promptImg.width = width * sizing;
         promptImg.height = 500 * sizing;
         promptZone.addChild(promptImg);
-        if (questions[curQuestion].answer !== undefined) {
-            answer = questions[curQuestion].answer;
-        } else {
-            answer = randomInt(1, 50);
-        }
+        answer = getAnswer();
         let alertImg = new Sprite(resources["images/icon_alert.png"].texture);
         alertImg.width = alertImg.height = 140 * sizing;
         promptZone.addChild(alertImg);
@@ -223,7 +221,7 @@
         promptZone.addChild(answerBox);
         answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
 
-        let answerText = new Text(answer.toString(),
+        answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 140, fill: "white"});
         answerBox.addChild(answerText);
         let anchor = anchorProps(answer.toString());
@@ -268,49 +266,15 @@
         comboZone.addChild(resultZone);
 
         // Create Options zone
-        let optionsZone = new Container();
+        optionsZone = new Container();
         let optionsImg = new Sprite(resources["images/window_draggables.png"].texture);
         optionsImg.width = width * sizing;
         optionsImg.height = height * sizing * 0.35;
         optionsZone.addChild(optionsImg);
         optionsZone.position.set(0, comboZone.y + comboZone.height - 20 * sizing);
         gameScene.addChild(optionsZone);
-
-        let numbers = createNumbers(questions[curQuestion].choices);
-        let operators = createOperators(questions[curQuestion].ops);
-
-        // Init draggable functionality on buttons.
-        makeDraggable(numbers);
-        makeDraggable(operators);
-
-        let numbersPane = new Container();
-        optionsZone.addChild(numbersPane);
-        numbersPane.y = 5 * sizing;
-        let leftOffset = 140 * sizing;
-        let vertOffset = 120 * sizing;
-        // 3x3 grid, max 9 buttons (w/o weirdness.)
-        for (let i = 0; i < numbers.length; i++) {
-            let curLine = Math.floor(i / 3);
-            let curPos = i % 3;
-            numbersPane.addChild(numbers[i]);
-            numbers[i].x = leftOffset + curPos * numbers[i].width - (10 * sizing * curPos);
-            numbers[i].y = vertOffset + curLine * numbers[i].height - (6 * sizing * curLine);
-            numbers[i].origPosition = {x: numbers[i].x, y: numbers[i].y }
-        }
-
-        let opsPane = new Container();
-        optionsZone.addChild(opsPane);
-        opsPane.y = 5 * sizing;
-        opsPane.x = numbersPane.width + numbersPane.x - 10 * sizing;
-        // Default 4, max 6.
-        for (let i = 0; i < operators.length; i++) {
-            let curLine = Math.floor(i / 2);
-            let curPos = i % 2;
-            opsPane.addChild(operators[i]);
-            operators[i].x = leftOffset + curPos * operators[i].width - (5 * curPos);
-            operators[i].y = vertOffset + curLine * operators[i].height; //+ (5 * curLine);
-            operators[i].origPosition = {x: operators[i].x, y: operators[i].y };
-        }
+        optionsZone.addChild(addNumbers());
+        optionsZone.addChild(addOps());
 
         // For graphical positioning assistance.
         //let wireframe = new Sprite(resources["images/outline_mockup.png"].texture);
@@ -331,7 +295,7 @@
         tryAgainBtn = new Sprite(resources["images/button_try_again.png"].texture);
         gameOverPrompt.addChild(tryAgainBtn);
         tryAgainBtn.clicked = false;
-        tryAgainBtn.interactive = true;
+        tryAgainBtn.interactive = true
         tryAgainBtn.on('click', function(evt) { tryAgainBtn.clicked = true });
         gameOverPrompt.position.set(20 * sizing, 360 * sizing);
         tryAgainBtn.width = 500 * sizing;
@@ -354,7 +318,7 @@
 
     function play() {
         // Battery gone?
-        if (batteryNum > 1) {
+        if (batteryNum > 6) {
             //message.text = "Battery drained!\nTry again?";
             state = lose;
         }
@@ -394,12 +358,40 @@
             window.setTimeout(function() {
                 curQuestion++;
                 //gameScene.visible = false;
-                stage.removeChild(gameScene);
-                setup();
+                //stage.removeChild(gameScene);
+                //setup();
+                loadNextQuestion()
             }, 2000)
         } else {
             eqButton.clicked = false;
         }
+    }
+
+    function loadNextQuestion() {
+        // Update battery
+        batteries[batteryNum - 1].visible = false;
+        batteries[batteryNum].visible = true;
+        // Update viruses
+        curVirusText.text = getCurVirusName();
+        let minis = minisZone.children.filter(function(elm) {
+           return elm.isMiniVirus === true && elm.visible === true;
+        });
+        minis[minis.length - 1].visible = false;
+        // Update answer
+        answer = getAnswer();
+        answerText.text = answer.toString();
+        let anchor = anchorProps(answer.toString());
+        answerText.anchor.set(anchor.x, anchor.y);
+        // Reset combo zone
+        resultText.text = "?";
+        resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "};
+        comboArea.text = "";
+        comboArea.mathSeq = [];
+        // Update buttons
+        numbersPane.destroy({ children: true });
+        opsPane.destroy({ children: true });
+        optionsZone.addChild(addNumbers());
+        optionsZone.addChild(addOps());
     }
 
     function win() {

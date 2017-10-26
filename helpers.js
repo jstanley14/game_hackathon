@@ -57,6 +57,45 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function addNumbers() {
+    numbersPane = new Container();
+    let numbers = createNumbers(questions[curQuestion].choices);
+    makeDraggable(numbers);
+    numbersPane.y = 5 * sizing;
+    let leftOffset = 140 * sizing;
+    let vertOffset = 120 * sizing;
+    // 3x3 grid, max 9 buttons (w/o weirdness.)
+    for (let i = 0; i < numbers.length; i++) {
+        let curLine = Math.floor(i / 3);
+        let curPos = i % 3;
+        numbersPane.addChild(numbers[i]);
+        numbers[i].x = leftOffset + curPos * numbers[i].width - (10 * sizing * curPos);
+        numbers[i].y = vertOffset + curLine * numbers[i].height - (6 * sizing * curLine);
+        numbers[i].origPosition = {x: numbers[i].x, y: numbers[i].y }
+    }
+    return numbersPane;
+}
+
+function addOps() {
+    opsPane = new Container();
+    let operators = createOperators(questions[curQuestion].ops);
+    makeDraggable(operators);
+    let leftOffset = 140 * sizing;
+    let vertOffset = 120 * sizing;
+    opsPane.y = 5 * sizing;
+    opsPane.x = numbersPane.width + numbersPane.x - 10 * sizing;
+    // Default 4, max 6.
+    for (let i = 0; i < operators.length; i++) {
+        let curLine = Math.floor(i / 2);
+        let curPos = i % 2;
+        opsPane.addChild(operators[i]);
+        operators[i].x = leftOffset + curPos * operators[i].width - (5 * curPos);
+        operators[i].y = vertOffset + curLine * operators[i].height;
+        operators[i].origPosition = {x: operators[i].x, y: operators[i].y };
+    }
+    return opsPane;
+}
+
 function createNumbers(nums) {
     let numbers = [];
     if (nums.length === 0) {
@@ -246,7 +285,7 @@ function randomName() {
     return virusNames[randomInt(0, virusNames.length - 1)];
 }
 
-// For centering text based on leng5h - assumes 1, 2, or 3.
+// For centering text based on length - assumes 1, 2, or 3.
 function anchorProps(text) {
     if (text.length === 3) {
         return { x: 0.1, y: -0.1 };
@@ -254,5 +293,21 @@ function anchorProps(text) {
         return { x: -0.1, y: -0.1 };
     } else {
         return { x: -0.8, y: -0.1 }
+    }
+}
+
+function getCurVirusName() {
+    if (!!questions[curQuestion].virusName) {
+        return questions[curQuestion].virusName
+    } else {
+        return randomName();
+    }
+}
+
+function getAnswer() {
+    if (questions[curQuestion].answer !== undefined) {
+        return questions[curQuestion].answer;
+    } else {
+        return randomInt(1, 50);
     }
 }

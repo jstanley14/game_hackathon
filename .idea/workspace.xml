@@ -2,27 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="600bde52-2fee-4ad5-8759-6294a073a15d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/button_help.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/button_okay.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/button_remove_virus.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/button_try_again.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/game_title.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/home_screen.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/home_screen_dark.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/popup_instructions.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/popup_virus_warning.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/popup_you_lose.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/popup_you_win.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/virus_guy_beaten.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/virus_guy_hello.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_divide.png" afterPath="$PROJECT_DIR$/images/draggable_divide.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_equals.png" afterPath="$PROJECT_DIR$/images/draggable_equals.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_minus.png" afterPath="$PROJECT_DIR$/images/draggable_minus.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_multiply.png" afterPath="$PROJECT_DIR$/images/draggable_multiply.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_num.png" afterPath="$PROJECT_DIR$/images/draggable_num.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/draggable_plus.png" afterPath="$PROJECT_DIR$/images/draggable_plus.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/target_number_box.png" afterPath="$PROJECT_DIR$/images/target_number_box.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game.html" afterPath="$PROJECT_DIR$/game.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers.js" afterPath="$PROJECT_DIR$/helpers.js" />
     </list>
@@ -35,14 +14,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5405229">
+    <splitter split-orientation="horizontal" split-proportion="0.5163399">
       <split-first>
         <leaf>
           <file leaf-file-name="game.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/game.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="384">
-                  <caret line="338" column="35" lean-forward="false" selection-start-line="338" selection-start-column="35" selection-end-line="338" selection-end-column="35" />
+                <state relative-caret-position="1109">
+                  <caret line="382" column="52" lean-forward="true" selection-start-line="382" selection-start-column="52" selection-end-line="382" selection-end-column="52" />
                   <folding />
                 </state>
               </provider>
@@ -55,8 +34,8 @@
           <file leaf-file-name="helpers.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/helpers.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="345">
-                  <caret line="242" column="2" lean-forward="true" selection-start-line="242" selection-start-column="2" selection-end-line="242" selection-end-column="2" />
+                <state relative-caret-position="237">
+                  <caret line="95" column="18" lean-forward="false" selection-start-line="95" selection-start-column="18" selection-end-line="95" selection-end-column="18" />
                   <folding />
                 </state>
               </provider>
@@ -300,12 +279,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1508764502487</updated>
-      <workItem from="1508764504965" duration="68912000" />
+      <workItem from="1508764504965" duration="73874000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68912000" />
+    <option name="totallyTimeSpent" value="73874000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1395" y="-146" width="1764" height="867" extended-state="0" />
@@ -347,7 +326,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -13006,18 +12985,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game.html">
+    <entry file="file://$PROJECT_DIR$/helpers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="338" column="35" lean-forward="false" selection-start-line="338" selection-start-column="35" selection-end-line="338" selection-end-column="35" />
+        <state relative-caret-position="237">
+          <caret line="95" column="18" lean-forward="false" selection-start-line="95" selection-start-column="18" selection-end-line="95" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/helpers.js">
+    <entry file="file://$PROJECT_DIR$/game.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="242" column="2" lean-forward="true" selection-start-line="242" selection-start-column="2" selection-end-line="242" selection-end-column="2" />
+        <state relative-caret-position="1109">
+          <caret line="382" column="52" lean-forward="true" selection-start-line="382" selection-start-column="52" selection-end-line="382" selection-end-column="52" />
           <folding />
         </state>
       </provider>
