@@ -97,6 +97,7 @@
     let questions = config.questions;
     let numQuestions = questions.length;
     let curQuestion = 0;
+    let smallViruses = [];
 
     function setup() {
         ticker = -1;
@@ -193,7 +194,7 @@
         for (let i = 0; i < bigVirusCount; i++) {
             bigViruses[i] = new Sprite(resources["images/virus_guy0" + (i + 1).toString() + ".png"].texture);
             bigViruses[i].width = 310 * sizing;
-            bigViruses[i].height = 290 * sizing;
+            bigViruses[i].height = 300 * sizing;
             bigViruses[i].visible = false;
             minisZone.addChild(bigViruses[i]);
             bigViruses[i].position.set(95 * sizing, 130 * sizing);
@@ -201,9 +202,7 @@
         bigViruses[0].visible = true;
 
         curVirusText = new Text(getCurVirusName(),
-            { fontFamily: "Arial", fontSize: 56, fill: "white" });
-        //minisZone.addChild(curVirus);
-        //curVirus.position.set(95 * sizing, 130 * sizing);
+            { fontFamily: "Arial", fontSize: 56, fill: "black" });
         minisZone.addChild(curVirusText);
         curVirusText.position.set(85 * sizing, 485 * sizing);
 
@@ -218,6 +217,7 @@
             let curPos = i % 4;
             virus.x = minisZone.width - 190 * sizing - virus.width * curPos;
             virus.y = 300 - 120 * sizing - (virus.height * (curLine - 1));
+            smallViruses.push(virus);
         }
 
 
@@ -239,11 +239,11 @@
 
         let answerBox = new Container();
         let answerBoxImg = new Sprite(resources["images/target_number_box.png"].texture);
-        answerBoxImg.width = answerBox.height = 200 * sizing;
+        answerBoxImg.width = answerBoxImg.height = 220 * sizing;
         answerBox.addChild(answerBoxImg);
         promptZone.addChild(answerBox);
         answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
-
+        
         answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 140, fill: "white"});
         answerBox.addChild(answerText);
@@ -317,6 +317,7 @@
     function gameLoop(){
         requestAnimationFrame(gameLoop);
         state();
+        //console.log(greenBackground.visible);
         renderer.render(stage);
     }
 
@@ -355,7 +356,6 @@
                 resultText.anchor.set(0.4, 0.3);
             }
             if (result === answer) {
-                resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "green"};
                 eqButton.clicked = false;
                 promptText.text = "Great job!";
                 virusAnalysis.visible = false;
@@ -400,11 +400,11 @@
         bigViruses[prevIndex].visible = false;
         bigViruses[nextIndex].visible = true;
         curVirusText.text = getCurVirusName();
-        let minis = minisZone.children.filter(function(elm) {
-           return elm.isMiniVirus === true && elm.visible === true;
+        let visibles = smallViruses.filter(function(v) {
+            return v.visible === true;
         });
-        if (!!minis[minis.length - 1]) {
-            minis[minis.length - 1].visible = false;
+        if (!!visibles[visibles.length - 1]) {
+            visibles[visibles.length - 1].visible = false;
         }
         // Update answer
         answer = getAnswer();
@@ -430,15 +430,15 @@
             tryAgainBtn.clicked = false;
             curQuestion = 0;
             batteryNum = 1;
-            bigViruses.forEach(function(v) { console.log(v.visible); v.visible = false ;});
-            bigViruses.forEach(function(v) {console.log(v.visible)});
+            bigViruses.forEach(function(v) { v.visible = false ;});
             updateBattery();
             winScene.visible = false;
             loseScene.visible = false;
             gameScene.addChild(topBar);
             gameScene.visible = true;
             loadNextQuestion();
-            minisZone.children.forEach(function(elm) { elm.visible = true });
+            //minisZone.children.forEach(function(elm) { elm.visible = true });
+            smallViruses.forEach(function(v) { v.visible = true; })
             state = play;
         }
     }

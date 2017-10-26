@@ -288,11 +288,11 @@ function randomName() {
 // For centering text based on length - assumes 1, 2, or 3.
 function anchorProps(text) {
     if (text.length === 3) {
-        return { x: 0.1, y: -0.1 };
+        return { x: -0.04, y: -0.2 };
     } else if (text.length === 2) {
-        return { x: -0.1, y: -0.1 };
+        return { x: -0.2, y: -0.2 };
     } else {
-        return { x: -0.8, y: -0.1 }
+        return { x: -0.8, y: -0.2 }
     }
 }
 
