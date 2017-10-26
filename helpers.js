@@ -311,3 +311,38 @@ function getAnswer() {
         return randomInt(1, 50);
     }
 }
+
+// winStatus true = win, false = lose.
+function makeGameOverScene(winStatus) {
+    let gameOverScene = new Container();
+    let gameOverPrompt;
+    gameOverScene.visible = false;
+    stage.addChild(gameOverScene);
+    let gameOverScreenBackground = new Sprite(resources["images/home_screen_dark.png"].texture);
+    gameOverScene.addChild(gameOverScreenBackground);
+    tryAgainBtn = new Sprite(resources["images/button_try_again.png"].texture);
+    tryAgainBtn.clicked = false;
+    tryAgainBtn.interactive = true;
+    tryAgainBtn.on('click', function(evt) { tryAgainBtn.clicked = true });
+    tryAgainBtn.width = 500 * sizing;
+    tryAgainBtn.height = 160 * sizing;
+    if (winStatus) {
+        gameOverPrompt = new Sprite(resources["images/popup_you_win.png"].texture);
+        let virusGuy = new Sprite(resources["images/virus_guy_beaten.png"].texture);
+        virusGuy.width = virusGuy.height = 420;
+        gameOverPrompt.addChild(virusGuy);
+        virusGuy.position.set(330 * sizing, 300 * sizing);
+        gameOverPrompt.addChild(tryAgainBtn);
+        tryAgainBtn.position.set(250 * sizing, 720 * sizing);
+    } else {
+        gameOverPrompt = new Sprite(resources["images/popup_you_lose.png"].texture);
+        let alertIcon = new Sprite(resources["images/icon_alert.png"].texture);
+        gameOverPrompt.addChild(alertIcon);
+        alertIcon.position.set(20 * sizing, -20 * sizing);
+        gameOverPrompt.addChild(tryAgainBtn);
+        tryAgainBtn.position.set(250 * sizing, 330 * sizing);
+    }
+    gameOverScene.addChild(gameOverPrompt);
+    gameOverPrompt.position.set(20 * sizing, 360 * sizing);
+    return gameOverScene;
+}

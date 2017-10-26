@@ -5,7 +5,6 @@
     <title>Malware Math</title>
 </head>
 <script src="pixi.js"></script>
-<script src="tink.js"></script>
 <script src="helpers.js"></script>
 <script src="config.js"></script>
 <body>
@@ -79,9 +78,9 @@
     //Define variables that might be used in more
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
-        tryAgainBtn, resultText, gameScene, gameOverScene, promptText,
+        tryAgainBtn, resultText, gameScene, promptText,
         batteries, id, minisText, curVirusText, answerText, numbersPane, opsPane,
-        optionsZone;
+        optionsZone, topBar, winScene, loseScene;
 
     let batteryNum = 1;
 
@@ -106,7 +105,7 @@
         gameScene.addChild(background);
 
         // Create top battery bar
-        let topBar = new Container();
+        topBar = new Container();
         let frames = [];
         for (let i = 0; i < 493; i++) {
             let val = "";
@@ -276,32 +275,13 @@
         optionsZone.addChild(addNumbers());
         optionsZone.addChild(addOps());
 
+        // End screens
+        winScene = makeGameOverScene(true);
+        loseScene = makeGameOverScene(false);
+
         // For graphical positioning assistance.
         //let wireframe = new Sprite(resources["images/outline_mockup.png"].texture);
         //gameScene.addChild(wireframe);
-
-        //Create the `gameOver` scene
-        gameOverScene = new Container();
-        stage.addChild(gameOverScene);
-
-        //Make the `gameOver` scene invisible when the game first starts
-        gameOverScene.visible = false;
-        let gameOverScreenBackground = new Sprite(resources["images/home_screen_dark.png"].texture);
-        gameOverScene.addChild(gameOverScreenBackground);
-        let gameOverPrompt = new Sprite(resources["images/popup_you_lose.png"].texture);
-        gameOverScene.addChild(gameOverPrompt);
-        let alertIcon = new Sprite(resources["images/icon_alert.png"].texture);
-        gameOverPrompt.addChild(alertIcon);
-        tryAgainBtn = new Sprite(resources["images/button_try_again.png"].texture);
-        gameOverPrompt.addChild(tryAgainBtn);
-        tryAgainBtn.clicked = false;
-        tryAgainBtn.interactive = true
-        tryAgainBtn.on('click', function(evt) { tryAgainBtn.clicked = true });
-        gameOverPrompt.position.set(20 * sizing, 360 * sizing);
-        tryAgainBtn.width = 500 * sizing;
-        tryAgainBtn.height = 160 * sizing;
-        tryAgainBtn.position.set(250 * sizing, 330 * sizing);
-        alertIcon.position.set(20 * sizing, -20 * sizing);
 
         //Set the game state
         state = play;
@@ -319,15 +299,19 @@
     function play() {
         // Battery gone?
         if (batteryNum > 6) {
-            //message.text = "Battery drained!\nTry again?";
-            state = lose;
+            state = done;
+            gameScene.visible = false;
+            loseScene.visible = true;
+            loseScene.addChild(topBar);
         }
         // Answered all questions?
-        if (curQuestion === numQuestions) {
-            //message.text = "A winner...\nis you!";
-            state = win;
+        //if (curQuestion === numQuestions) {
+        if (curQuestion === 1) {
+            state = done;
+            gameScene.visible = false;
+            winScene.visible = true;
+            winScene.addChild(topBar);
         }
-
 
         ticker++;
         if (ticker % 60 === 0) {
@@ -357,10 +341,7 @@
             // wait a second and load next question
             window.setTimeout(function() {
                 curQuestion++;
-                //gameScene.visible = false;
-                //stage.removeChild(gameScene);
-                //setup();
-                loadNextQuestion()
+                loadNextQuestion();
             }, 2000)
         } else {
             eqButton.clicked = false;
@@ -369,14 +350,18 @@
 
     function loadNextQuestion() {
         // Update battery
-        batteries[batteryNum - 1].visible = false;
+        if (!!batteries[batteryNum - 1]) {
+            batteries[batteryNum - 1].visible = false;
+        }
         batteries[batteryNum].visible = true;
         // Update viruses
         curVirusText.text = getCurVirusName();
         let minis = minisZone.children.filter(function(elm) {
            return elm.isMiniVirus === true && elm.visible === true;
         });
-        minis[minis.length - 1].visible = false;
+        if (!!minis[minis.length - 1]) {
+            minis[minis.length - 1].visible = false;
+        }
         // Update answer
         answer = getAnswer();
         answerText.text = answer.toString();
@@ -394,23 +379,20 @@
         optionsZone.addChild(addOps());
     }
 
-    function win() {
-
-    }
-
-    function lose() {
-        gameScene.visible = false;
-        gameOverScene.visible = true;
+    function done() {
         if (tryAgainBtn.clicked) {
-            gameOverScene.visible = false;
+            tryAgainBtn.clicked = false;
             curQuestion = 0;
             batteryNum = 1;
-            setup();
+            winScene.visible = false;
+            loseScene.visible = false;
+            gameScene.addChild(topBar);
+            gameScene.visible = true;
+            loadNextQuestion();
+            minisZone.children.forEach(function(elm) { elm.visible = true });
+            state = play;
         }
     }
-
-
-
 </script>
 </body>
 </html>
