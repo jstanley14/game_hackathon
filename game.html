@@ -48,7 +48,6 @@
         .add("images/window_alert.png")
         .add("images/window_virus_area.png")
         .add("images/progress_number.png")
-        .add("images/temp_virus_guy01.png")
         .add("images/temp_virus_guy_mini.png")
         .add("images/battery_state01.png")
         .add("images/battery_state02.png")
@@ -71,19 +70,30 @@
         .add("images/popup_virus_warning.png")
         .add("images/popup_you_lose.png")
         .add("images/popup_you_win.png")
-        .add("images/virus_guy_beaten.png")
+        //.add("images/virus_guy_beaten.png")
         .add("images/virus_guy_hello.png")
+        .add("images/virus_in_cage.png")
+        .add("images/window_virus_neutral.png")
+        .add("images/label_battery_drain.png")
+        .add("images/label_virus_analysis.png")
+        .add("images/label_virus_removed.png")
+        .add("images/window_virus_area_red.png")
+        .add("images/window_virus_cleared.png")
+        .add("images/virus_guy01.png")
+        .add("images/virus_guy02.png")
+        .add("images/virus_guy03.png")
         .load(setup);
 
     //Define variables that might be used in more
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
-        tryAgainBtn, resultText, gameScene, promptText,
-        batteries, id, minisText, curVirusText, answerText, numbersPane, opsPane,
-        optionsZone, topBar, winScene, loseScene;
+        tryAgainBtn, resultText, gameScene, promptText, bigViruses,
+        batteries, id, curVirusText, answerText, numbersPane, opsPane,
+        optionsZone, topBar, winScene, loseScene, yellowBackground, redBackground,
+        greenBackground, virusAnalysis, virusRemoved, batteryDrain;
 
     let batteryNum = 1;
-
+    let bigVirusCount = 3;
     let questions = config.questions;
     let numQuestions = questions.length;
     let curQuestion = 0;
@@ -155,25 +165,45 @@
         // Create Minis zone
         minisZone = new Container();
         minisZone.y = topBar.height + 70 * sizing;
-        let minisImg = new Sprite(resources["images/window_virus_area.png"].texture);
-        minisImg.width = width * sizing;
-        minisImg.height = height * sizing * 0.31;
-        minisZone.addChild(minisImg);
-        minisText = new Text("Virus Analysis",
-            { fontFamily: "Arial", fontSize: 65 * sizing, fill: "black"});
-        minisZone.addChild(minisText);
-        minisText.position.set(325 * sizing, 36 * sizing);
+        yellowBackground = new Sprite(resources["images/window_virus_neutral.png"].texture);
+        redBackground = new Sprite(resources["images/window_virus_area_red.png"].texture);
+        greenBackground = new Sprite(resources["images/window_virus_cleared.png"].texture);
+        redBackground.visible = greenBackground.visible = false;
+        redBackground.width = greenBackground.width = yellowBackground.width = width * sizing;
+        redBackground.height = greenBackground.height = yellowBackground.height = height * sizing * 0.31;
+        minisZone.addChild(redBackground);
+        minisZone.addChild(yellowBackground);
+        minisZone.addChild(greenBackground);
+        virusAnalysis = new Sprite(resources["images/label_virus_analysis.png"].texture);
+        virusRemoved = new Sprite(resources["images/label_virus_removed.png"].texture);
+        batteryDrain = new Sprite(resources["images/label_battery_drain.png"].texture);
+        virusAnalysis.width = virusRemoved.width = batteryDrain.width = 700 * sizing;
+        virusAnalysis.height = virusRemoved.height = batteryDrain.height = 110 * sizing;
+        virusRemoved.visible = batteryDrain.visible = false;
+        minisZone.addChild(virusAnalysis);
+        minisZone.addChild(virusRemoved);
+        minisZone.addChild(batteryDrain);
+        virusAnalysis.position.set(200 * sizing, 36 * sizing);
+        virusRemoved.position.set(200 * sizing, 36 * sizing);
+        batteryDrain.position.set(200 * sizing, 36 * sizing);
         gameScene.addChild(minisZone);
 
         // Add viruses
-        let curVirus = new Sprite(resources["images/temp_virus_guy01.png"].texture);
-        curVirus.width = 310 * sizing;
-        curVirus.height = 290 * sizing;
+        bigViruses = [];
+        for (let i = 0; i < bigVirusCount; i++) {
+            bigViruses[i] = new Sprite(resources["images/virus_guy0" + (i + 1).toString() + ".png"].texture);
+            bigViruses[i].width = 310 * sizing;
+            bigViruses[i].height = 290 * sizing;
+            bigViruses[i].visible = false;
+            minisZone.addChild(bigViruses[i]);
+            bigViruses[i].position.set(95 * sizing, 130 * sizing);
+        }
+        bigViruses[0].visible = true;
 
         curVirusText = new Text(getCurVirusName(),
             { fontFamily: "Arial", fontSize: 56, fill: "white" });
-        minisZone.addChild(curVirus);
-        curVirus.position.set(95 * sizing, 130 * sizing);
+        //minisZone.addChild(curVirus);
+        //curVirus.position.set(95 * sizing, 130 * sizing);
         minisZone.addChild(curVirusText);
         curVirusText.position.set(85 * sizing, 485 * sizing);
 
@@ -203,13 +233,7 @@
         promptZone.addChild(alertImg);
         alertImg.position.set(35 * sizing, 60 * sizing);
 
-        let prompt = "";
-        if (!!questions[curQuestion].prompt) {
-            prompt = questions[curQuestion].prompt;
-        } else {
-            prompt = randomPrompt();
-        }
-        promptText = new Text(prompt, { fontFamily: "Arial", fontSize: 50 * sizing });
+        promptText = new Text(getPrompt(), { fontFamily: "Arial", fontSize: 50 * sizing });
         promptZone.addChild(promptText);
         promptText.position.set(200 * sizing, 80 * sizing);
 
@@ -300,17 +324,20 @@
         // Battery gone?
         if (batteryNum > 6) {
             state = done;
-            gameScene.visible = false;
-            loseScene.visible = true;
-            loseScene.addChild(topBar);
+            setTimeout(function() {
+                gameScene.visible = false;
+                loseScene.visible = true;
+                loseScene.addChild(topBar);
+            }, 2000);
         }
         // Answered all questions?
-        //if (curQuestion === numQuestions) {
-        if (curQuestion === 1) {
+        if (curQuestion === numQuestions) {
             state = done;
-            gameScene.visible = false;
-            winScene.visible = true;
-            winScene.addChild(topBar);
+            setTimeout(function() {
+                gameScene.visible = false;
+                winScene.visible = true;
+                winScene.addChild(topBar);
+            }, 2000);
         }
 
         ticker++;
@@ -331,16 +358,25 @@
                 resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "green"};
                 eqButton.clicked = false;
                 promptText.text = "Great job!";
+                virusAnalysis.visible = false;
+                virusRemoved.visible = true;
+                yellowBackground.visible = false;
+                greenBackground.visible = true;
             } else {
                 resultText.style =  { fontFamily: "Arial", fontSize: 140 * sizing, fill: "red "};
                 eqButton.clicked = false;
                 promptText.text = "The virus spreads!";
                 batteryNum++;
-                minisText.text = "Battery impacted!"
+                //minisText.text = "Battery impacted!";
+                virusAnalysis.visible = false;
+                batteryDrain.visible = true;
+                yellowBackground.visible = false;
+                redBackground.visible = true;
             }
-            // wait a second and load next question
+            // wait a sec and load next question
+            curQuestion++;
+            updateBattery();
             window.setTimeout(function() {
-                curQuestion++;
                 loadNextQuestion();
             }, 2000)
         } else {
@@ -349,12 +385,20 @@
     }
 
     function loadNextQuestion() {
-        // Update battery
-        if (!!batteries[batteryNum - 1]) {
-            batteries[batteryNum - 1].visible = false;
-        }
-        batteries[batteryNum].visible = true;
         // Update viruses
+        let nextIndex = curQuestion % bigVirusCount;
+        let prevIndex;
+        if (nextIndex === 0) {
+            prevIndex = bigVirusCount - 1;
+        } else {
+            prevIndex = nextIndex - 1;
+        }
+        greenBackground.visible = redBackground.visible = false;
+        yellowBackground.visible = true;
+        virusRemoved.visible = batteryDrain.visible = false;
+        virusAnalysis.visible = true;
+        bigViruses[prevIndex].visible = false;
+        bigViruses[nextIndex].visible = true;
         curVirusText.text = getCurVirusName();
         let minis = minisZone.children.filter(function(elm) {
            return elm.isMiniVirus === true && elm.visible === true;
@@ -367,6 +411,8 @@
         answerText.text = answer.toString();
         let anchor = anchorProps(answer.toString());
         answerText.anchor.set(anchor.x, anchor.y);
+        // Update prompt
+        promptText.text = getPrompt();
         // Reset combo zone
         resultText.text = "?";
         resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "};
@@ -384,6 +430,9 @@
             tryAgainBtn.clicked = false;
             curQuestion = 0;
             batteryNum = 1;
+            bigViruses.forEach(function(v) { console.log(v.visible); v.visible = false ;});
+            bigViruses.forEach(function(v) {console.log(v.visible)});
+            updateBattery();
             winScene.visible = false;
             loseScene.visible = false;
             gameScene.addChild(topBar);
@@ -393,6 +442,7 @@
             state = play;
         }
     }
+
 </script>
 </body>
 </html>

@@ -328,12 +328,13 @@ function makeGameOverScene(winStatus) {
     tryAgainBtn.height = 160 * sizing;
     if (winStatus) {
         gameOverPrompt = new Sprite(resources["images/popup_you_win.png"].texture);
-        let virusGuy = new Sprite(resources["images/virus_guy_beaten.png"].texture);
-        virusGuy.width = virusGuy.height = 420;
+        let virusGuy = new Sprite(resources["images/virus_in_cage.png"].texture);
+        virusGuy.width = 500 * sizing;
+        virusGuy.height = 370 * sizing;
         gameOverPrompt.addChild(virusGuy);
-        virusGuy.position.set(330 * sizing, 300 * sizing);
+        virusGuy.position.set(280 * sizing, 360 * sizing);
         gameOverPrompt.addChild(tryAgainBtn);
-        tryAgainBtn.position.set(250 * sizing, 720 * sizing);
+        tryAgainBtn.position.set(270 * sizing, 720 * sizing);
     } else {
         gameOverPrompt = new Sprite(resources["images/popup_you_lose.png"].texture);
         let alertIcon = new Sprite(resources["images/icon_alert.png"].texture);
@@ -345,4 +346,19 @@ function makeGameOverScene(winStatus) {
     gameOverScene.addChild(gameOverPrompt);
     gameOverPrompt.position.set(20 * sizing, 360 * sizing);
     return gameOverScene;
+}
+
+function updateBattery() {
+    if (!!batteries[batteryNum - 1]) {
+        batteries[batteryNum - 1].visible = false;
+    }
+    batteries[batteryNum].visible = true;
+}
+
+function getPrompt() {
+    if (!!questions[curQuestion].prompt) {
+        return questions[curQuestion].prompt;
+    } else {
+        return randomPrompt();
+    }
 }
