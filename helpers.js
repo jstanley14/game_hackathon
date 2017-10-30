@@ -191,7 +191,11 @@ function onDragMove() {
 }
 
 function dropInComboArea(elm) {
-    if (comboArea.mathSeq.length > 0) {
+    // Full already.
+    if  (comboArea.mathSeq.length >= 5) {
+        elm.position.x = elm.origPosition.x;
+        elm.position.y = elm.origPosition.y;
+    } else if (comboArea.mathSeq.length > 0) {
         if (comboArea.mathSeq[comboArea.mathSeq.length - 1].type !== elm.type) {
             if (elm.type === "number") {
                 elm.visible = false;
@@ -216,7 +220,35 @@ function dropInComboArea(elm) {
 }
 
 function addToComboArea(elm) {
-    comboArea.text = comboArea.text + elm.text;
+    //comboArea.text = comboArea.text + elm.text;
+    let ctr = new Container();
+    let btn;
+    if (elm.type === "number") {
+        btn = new Sprite(resources["images/math_flat_blue.png"].texture);
+        let txt = new Text(elm.text, { fontFamily: "Arial", fontSize: 80, fill: "white" });
+        btn.width = btn.height = 150;
+        ctr.addChild(btn);
+        ctr.addChild(txt);
+        txt.position.set(50 * sizing, 20 * sizing)
+    } else {
+        switch (elm.value) {
+            case "+":
+                btn = new Sprite(resources["images/math_flat_plus.png"].texture);
+                break;
+            case "-":
+                btn = new Sprite(resources["images/math_flat_minus.png"].texture);
+                break;
+            case "*":
+                btn = new Sprite(resources["images/math_flat_multiply.png"].texture);
+                break;
+            case "/":
+                btn = new Sprite(resources["images/math_flat_divide.png"].texture);
+        }
+        btn.width = btn.height = 150;
+        ctr.addChild(btn);
+    }
+    comboArea.addChild(ctr);
+    ctr.x = (comboArea.children.length - 1) * (ctr.width - 35) + 10 * sizing;
     comboArea.mathSeq.push({ type: elm.type, value: elm.value });
 }
 

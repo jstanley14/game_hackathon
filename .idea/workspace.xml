@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="600bde52-2fee-4ad5-8759-6294a073a15d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/virus_guy01.png" afterPath="$PROJECT_DIR$/images/virus_guy01.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/virus_guy02.png" afterPath="$PROJECT_DIR$/images/virus_guy02.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/virus_guy03.png" afterPath="$PROJECT_DIR$/images/virus_guy03.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game.html" afterPath="$PROJECT_DIR$/game.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers.js" afterPath="$PROJECT_DIR$/helpers.js" />
     </list>
@@ -14,14 +17,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.46078432">
+    <splitter split-orientation="horizontal" split-proportion="0.3897893">
       <split-first>
         <leaf>
           <file leaf-file-name="game.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/game.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="108">
-                  <caret line="245" column="8" lean-forward="false" selection-start-line="245" selection-start-column="8" selection-end-line="245" selection-end-column="8" />
+                <state relative-caret-position="123">
+                  <caret line="148" column="0" lean-forward="false" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -34,8 +37,8 @@
           <file leaf-file-name="helpers.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/helpers.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="396">
-                  <caret line="290" column="25" lean-forward="false" selection-start-line="290" selection-start-column="25" selection-end-line="290" selection-end-column="25" />
+                <state relative-caret-position="211">
+                  <caret line="196" column="44" lean-forward="false" selection-start-line="196" selection-start-column="44" selection-end-line="196" selection-end-column="44" />
                   <folding />
                 </state>
               </provider>
@@ -69,6 +72,8 @@
       <find>visibility</find>
       <find>greenBackground.visible</find>
       <find>minisZone.chil</find>
+      <find>resultText</find>
+      <find>comboArea</find>
     </findStrings>
     <replaceStrings>
       <replace>let</replace>
@@ -88,8 +93,8 @@
         <option value="$PROJECT_DIR$/game_hackathon.iml" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/config.js" />
-        <option value="$PROJECT_DIR$/helpers.js" />
         <option value="$PROJECT_DIR$/game.html" />
+        <option value="$PROJECT_DIR$/helpers.js" />
       </list>
     </option>
   </component>
@@ -108,10 +113,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="1395" />
-    <option name="y" value="-146" />
-    <option name="width" value="1764" />
-    <option name="height" value="867" />
+    <option name="x" value="4" />
+    <option name="y" value="23" />
+    <option name="width" value="1276" />
+    <option name="height" value="777" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -287,15 +292,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1508764502487</updated>
-      <workItem from="1508764504965" duration="88308000" />
+      <workItem from="1508764504965" duration="92164000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88308000" />
+    <option name="totallyTimeSpent" value="92164000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1395" y="-146" width="1764" height="867" extended-state="0" />
+    <frame x="4" y="23" width="1276" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -310,7 +315,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11149826" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15559158" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -334,7 +339,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -12993,18 +12998,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/helpers.js">
+    <entry file="file://$PROJECT_DIR$/game.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="290" column="25" lean-forward="false" selection-start-line="290" selection-start-column="25" selection-end-line="290" selection-end-column="25" />
+        <state relative-caret-position="123">
+          <caret line="148" column="0" lean-forward="false" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game.html">
+    <entry file="file://$PROJECT_DIR$/helpers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="245" column="8" lean-forward="false" selection-start-line="245" selection-start-column="8" selection-end-line="245" selection-end-column="8" />
+        <state relative-caret-position="211">
+          <caret line="196" column="44" lean-forward="false" selection-start-line="196" selection-start-column="44" selection-end-line="196" selection-end-column="44" />
           <folding />
         </state>
       </provider>

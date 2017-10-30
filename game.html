@@ -82,6 +82,17 @@
         .add("images/virus_guy01.png")
         .add("images/virus_guy02.png")
         .add("images/virus_guy03.png")
+        .add("images/virus_guy04.png")
+        .add("images/virus_guy05.png")
+        .add("images/virus_guy06.png")
+        .add("images/virus_guy07.png")
+        .add("images/virus_guy08.png")
+        .add("images/math_flat_blue.png")
+        .add("images/math_flat_plus.png")
+        .add("images/math_flat_minus.png")
+        .add("images/math_flat_divide.png")
+        .add("images/math_flat_multiply.png")
+        .add("images/button_undo.png")
         .load(setup);
 
     //Define variables that might be used in more
@@ -93,7 +104,7 @@
         greenBackground, virusAnalysis, virusRemoved, batteryDrain;
 
     let batteryNum = 1;
-    let bigVirusCount = 3;
+    let bigVirusCount = 8;
     let questions = config.questions;
     let numQuestions = questions.length;
     let curQuestion = 0;
@@ -193,11 +204,11 @@
         bigViruses = [];
         for (let i = 0; i < bigVirusCount; i++) {
             bigViruses[i] = new Sprite(resources["images/virus_guy0" + (i + 1).toString() + ".png"].texture);
-            bigViruses[i].width = 310 * sizing;
-            bigViruses[i].height = 300 * sizing;
+            bigViruses[i].width = 500 * sizing;
+            bigViruses[i].height = 410 * sizing;
             bigViruses[i].visible = false;
             minisZone.addChild(bigViruses[i]);
-            bigViruses[i].position.set(95 * sizing, 130 * sizing);
+            bigViruses[i].position.set(10 * sizing, 100 * sizing);
         }
         bigViruses[0].visible = true;
 
@@ -243,7 +254,7 @@
         answerBox.addChild(answerBoxImg);
         promptZone.addChild(answerBox);
         answerBox.position.set((promptZone.width - 230) * sizing, 25 * sizing);
-        
+
         answerText = new Text(answer.toString(),
             { fontFamily: "Arial", fontSize: 140, fill: "white"});
         answerBox.addChild(answerText);
@@ -258,8 +269,7 @@
         comboRect.drawRoundedRect(0, 0, 588, 188, 40); // one on right is 188x188
         comboZone.addChild(comboRect);
         comboRect.x = 45 * sizing;
-        comboArea = new Text("",
-            { fontFamily: "Arial", fontSize: 140, fill: "black" });
+        comboArea = new Container();
         comboArea.mathSeq = [];
         comboZone.addChild(comboArea);
         comboArea.position.set(25 * sizing, 13 * sizing);
@@ -414,9 +424,13 @@
         // Update prompt
         promptText.text = getPrompt();
         // Reset combo zone
+        comboArea.destroy({ children: true});
+        comboArea = new Container();
+        comboArea.mathSeq = [];
+        comboZone.addChild(comboArea);
+        comboArea.position.set(25 * sizing, 13 * sizing);
         resultText.text = "?";
         resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "};
-        comboArea.text = "";
         comboArea.mathSeq = [];
         // Update buttons
         numbersPane.destroy({ children: true });
