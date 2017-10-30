@@ -241,7 +241,12 @@ function addToComboArea(elm) {
         btn.width = btn.height = 150;
         ctr.addChild(btn);
         ctr.addChild(txt);
-        txt.position.set(50 * sizing, 20 * sizing)
+        txt.position.set(50 * sizing, 20 * sizing);
+        if (elm.text.length === 1) {
+            txt.anchor.set(0);
+        } else if (elm.text.length === 2) {
+            txt.anchor.set(0.2, 0);
+        }
     } else {
         switch (elm.value) {
             case "+":
@@ -310,7 +315,10 @@ let prompts = [
     "File under attack!\nID: ",
     "Error found!\nLine: ",
     "Firewall under pressure!\nClear port: ",
-    "Reset encryption key!\nNeeded: "
+    "Reset encryption key!\nNeeded: ",
+    "Shared secret decoded!\nMake new: ",
+    "Rainbow table in use!\nAdd salt: ",
+    "Elevated process discovered!\nID: "
 ];
 
 function randomPrompt() {
@@ -322,7 +330,11 @@ let virusNames = [
     "Sassy Sasser",
     "Colin Ficker",
     "Crypto Locker",
-    "I am Not a Virus!"
+    "I am Not a Virus!",
+    "Malicious Marty",
+    "Dangerous Dave",
+    "Buffy Overflow",
+    "Stux Ned"
 ];
 
 function randomName() {

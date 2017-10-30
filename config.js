@@ -1,30 +1,36 @@
 // Example JSON configuration
 
-// numQuestions
 let config = {
     questions: [
         {
-            ops: ["+", "-", "*", "/"],
+          ops: ["+", "-", "*", "/"],
+          choices: [-2, 1, 3, 6, 7, 9, 10, 11, 13],
+          answer: 23
+        },
+        {
+            ops: ["-", "*"],
             //opsOrder: [],
-            choices: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            answer: 15,
-            prompt: "Malicious process detected!\nID: ",
-            virusName: "Byte Bandito"
+            choices: [-5, -3, -2, 0, 1, 2],
+            answer: 17,
+            //prompt: "Malicious process detected!\nID: ",
+            //virusName: "Byte Bandito"
         },
         {
-            ops: ["+", "*"],
+            ops: ["*", "/"],
             //opsOrder: [1, 0],
-            choices: [4, 5, 6, 7, 8, 9, 10, 11],
-            answer: 23,
-            prompt: "Your text here!!!"
+            choices: [2, 5, 7, 8, 9, 12],
+            answer: 1.5,
+            //prompt: "Your text here!!!"
+        },
+        {
+            ops: ["+", "/"],
+            choices: [7, 14, 21, 40],
+            answer: 42
         },
         {
             ops: [],
-            choices: []
-        },
-        {
-            ops: [],
-            choices: []
+            choices: [],
+            prompt: "Questions can be randomly generated or programmed.",
         },
         {
             ops: [],
