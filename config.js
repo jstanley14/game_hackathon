@@ -30,7 +30,7 @@ let config = {
         {
             ops: [],
             choices: [],
-            prompt: "Questions can be randomly generated or programmed.",
+            prompt: "Questions can be randomly\ngenerated or programmed.",
         },
         {
             ops: [],
