@@ -101,7 +101,7 @@
         tryAgainBtn, resultText, gameScene, promptText, bigViruses,
         batteries, id, curVirusText, answerText, numbersPane, opsPane,
         optionsZone, topBar, winScene, loseScene, yellowBackground, redBackground,
-        greenBackground, virusAnalysis, virusRemoved, batteryDrain;
+        greenBackground, virusAnalysis, virusRemoved, batteryDrain, numbers;
 
     let batteryNum = 1;
     let bigVirusCount = 8;
@@ -308,6 +308,18 @@
         gameScene.addChild(optionsZone);
         optionsZone.addChild(addNumbers());
         optionsZone.addChild(addOps());
+        let undoBtn = new Sprite(resources["images/button_undo.png"].texture);
+        undoBtn.width = undoBtn.height = 210 * sizing;
+        optionsZone.addChild(undoBtn);
+        undoBtn.anchor.set(0.5);
+        undoBtn.x = optionsZone.width - undoBtn.width - 30;
+        undoBtn.y = optionsZone.height - undoBtn.height - 25;
+        makeDraggable([undoBtn]);
+        undoBtn.origPosition = {x: undoBtn.x, y: undoBtn.y };
+        undoBtn.type = "operator";
+        undoBtn.value = "undo";
+
+
 
         // End screens
         winScene = makeGameOverScene(true);

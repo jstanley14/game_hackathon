@@ -59,7 +59,7 @@ function randomInt(min, max) {
 
 function addNumbers() {
     numbersPane = new Container();
-    let numbers = createNumbers(questions[curQuestion].choices);
+    numbers = createNumbers(questions[curQuestion].choices);
     makeDraggable(numbers);
     numbersPane.y = 5 * sizing;
     let leftOffset = 140 * sizing;
@@ -191,8 +191,20 @@ function onDragMove() {
 }
 
 function dropInComboArea(elm) {
-    // Full already.
-    if  (comboArea.mathSeq.length >= 5) {
+    if (elm.type === "operator" && elm.value === "undo") {
+        elm.position.x = elm.origPosition.x;
+        elm.position.y = elm.origPosition.y;
+        comboArea.destroy({ children: true});
+        comboArea = new Container();
+        comboZone.addChild(comboArea);
+        comboArea.position.set(25 * sizing, 13 * sizing);
+        comboArea.mathSeq = [];
+        numbers.forEach(function(elm) {
+            elm.visible = true;
+            elm.x = elm.origPosition.x;
+            elm.y = elm.origPosition.y; });
+    } else if  (comboArea.mathSeq.length >= 5) {
+        // Full already.
         elm.position.x = elm.origPosition.x;
         elm.position.y = elm.origPosition.y;
     } else if (comboArea.mathSeq.length > 0) {
