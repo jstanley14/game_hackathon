@@ -98,10 +98,10 @@
     //Define variables that might be used in more
     //than one function
     let state, comboZone, comboArea, answer, eqButton, minisZone, time, ticker,
-        tryAgainBtn, resultText, gameScene, promptText, bigViruses,
+        tryAgainBtn, resultText, gameScene, promptText, bigViruses, numbers,
         batteries, id, curVirusText, answerText, numbersPane, opsPane,
         optionsZone, topBar, winScene, loseScene, yellowBackground, redBackground,
-        greenBackground, virusAnalysis, virusRemoved, batteryDrain, numbers;
+        greenBackground, virusAnalysis, virusRemoved, batteryDrain, comboText;
 
     let batteryNum = 1;
     let bigVirusCount = 8;
@@ -275,6 +275,10 @@
         comboArea.position.set(25 * sizing, 13 * sizing);
         gameScene.addChild(comboZone);
         comboZone.y = promptZone.y + promptZone.height - comboZone.height - 40 * sizing;
+        comboText = new Text("Drag values and operators here\nto build an equation",
+            { fontSize: 40, fill: "0xBEBEBE", align: "center"});
+        comboArea.addChild(comboText);
+        comboText.position.set(35, 25);
 
         // Setup Equals button (check result.)
         eqButton = new Sprite(resources["images/draggable_equals.png"].texture);
@@ -444,6 +448,10 @@
         resultText.text = "?";
         resultText.style = { fontFamily: "Arial", fontSize: 140 * sizing, fill: "black "};
         comboArea.mathSeq = [];
+        comboText = new Text("Drag values and operators here\nto build an equation",
+            { fontSize: 40, fill: "0xBEBEBE", align: "center"});
+        comboArea.addChild(comboText);
+        comboText.position.set(35, 25);
         // Update buttons
         numbersPane.destroy({ children: true });
         opsPane.destroy({ children: true });

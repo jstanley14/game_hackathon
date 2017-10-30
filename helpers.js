@@ -199,6 +199,10 @@ function dropInComboArea(elm) {
         comboZone.addChild(comboArea);
         comboArea.position.set(25 * sizing, 13 * sizing);
         comboArea.mathSeq = [];
+        comboText = new Text("Drag values and operators here\nto build an equation",
+            { fontSize: 40, fill: "0xBEBEBE", align: "center"});
+        comboArea.addChild(comboText);
+        comboText.position.set(35, 25);
         numbers.forEach(function(elm) {
             elm.visible = true;
             elm.x = elm.origPosition.x;
@@ -235,6 +239,8 @@ function addToComboArea(elm) {
     //comboArea.text = comboArea.text + elm.text;
     let ctr = new Container();
     let btn;
+    comboArea.removeChild(comboText);
+    //comboText.visible = false;
     if (elm.type === "number") {
         btn = new Sprite(resources["images/math_flat_blue.png"].texture);
         let txt = new Text(elm.text, { fontFamily: "Arial", fontSize: 80, fill: "white" });
